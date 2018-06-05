@@ -1,0 +1,239 @@
+<?php TPL::output('global/header.tpl.htm'); ?>
+
+<div class="aw-container-wrap">
+	<div class="container aw-publish">
+		<div class="row">
+			<div class="aw-content-wrap clearfix">
+				<div class="col-sm-12 col-md-9 aw-main-content">
+					<!-- tab 切换 -->
+					<ul class="nav nav-tabs aw-nav-tabs active">
+						<h2 class="hidden-xs"><i class="icon icon-ask"></i> <?php _e('提交审核中'); ?></h2>
+					</ul>
+					<!-- end tab 切换 -->
+				<!-- 支付 -->
+				<div class="pc-pay">
+				<h3 class="box-title22">选择以下服务获取专业律师帮助！</h3>
+				<div class="box">
+				<div class="box-left">
+				<div class="con bor-line">
+				<div class="frl choice">
+				<div class="main-pay">
+				<ul class="zxxuanze_ul1">
+				  <li class="litit"></li>
+				  <li><span><img src="http://www.lvwen360.com/static/css/default/img/time.png" alt=""></span><span>审核时间</span></li>
+				  <li><span><img src="http://www.lvwen360.com/static/css/default/img/time.png" alt=""></span><span>解答时间</span></li>
+				  <li><span><img src="http://www.lvwen360.com/static/css/default/img/time.png" alt=""></span><span>解答提醒</span></li>
+				  <li><span><img src="http://www.lvwen360.com/static/css/default/img/time.png" alt=""></span><span>选择率</span></li>
+				  <li><span><img src="http://www.lvwen360.com/static/css/default/img/time.png" alt=""></span><span>金额</span></li>
+				</ul>
+				<ul class="zxxuanze_ul2 sbtn on" data-id="1">
+				  <li class="liclass1 litit">
+				  <span class="viptype">VIP1</span>
+				  </li>
+				  <li>＜1分钟</li>
+				  <li>150分钟内</li>
+				  <li>短信1次</li>
+				  <li>6%</li>
+				  <li class="h60">
+				  <div class="btn">支付￥29.9元</div>
+				  </li>
+				</ul>
+				<ul class="zxxuanze_ul3 sbtn borderLeft" data-id="2">
+				  <li class="liclass1 litit">
+				  <span class="viptype">VIP2</span>
+				  </li>
+				  <li>＜1分钟</li>
+				  <li>60分钟内</li>
+				  <li>短信10次</li>
+				  <li>81%</li>
+				  <li class="h60">
+				  <div class="btn">支付￥59.9元</div>
+				  </li>
+				</ul>
+				<ul class="zxxuanze_ul4 sbtn" data-id="3">
+				  <li class="liclass1 litit">
+				  <span class="viptype">VIP3</span>
+				  </li>
+				  <li>＜1分钟</li>
+				  <li>30分钟内</li>
+				  <li>不限次数</li>
+				  <li>13%</li>
+				  <li class="h60">
+				  <div class="btn">支付￥99.9元</div>
+				  </li>
+				</ul>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				<!-- end支付 -->
+				<!-- 侧边栏 -->
+				<div class="col-sm-12 col-md-3 aw-side-bar hidden-xs">
+					<!-- 问题发起指南 -->
+					<div class="aw-mod publish-help">
+						<div class="mod-head">
+							<h3><?php _e('服务说明指南'); ?></h3>
+						</div>
+						<div class="mod-body">
+							<p><b>• <?php _e('服务内容'); ?>:</b> <?php _e('本服务只包含咨询内容解答服务，不包含合同审查、撰写等律师实务。'); ?></p>
+							<p><b>• <?php _e('服务领域'); ?>:</b> <?php _e('计划生育/户口/中奖/加盟/退休/退伍等不属于法律问题，律师无法给予合理解答'); ?></p>
+							<p><b>• <?php _e('服务时间'); ?></b> <?php _e('支付成功后将在约定时间内在线解答（工作日9:00-18:00，周六周日以及法定节假日发布的问题，会顺延至工作日后的12小时内进行解答）'); ?></p>
+							<p><b>• <?php _e('服务方式'); ?></b> <?php _e('咨询发布口，将进入审核环节，随后进入解答环节，所有服务将在线完成，一经支付、 不予退款'); ?></p>
+							<p><b>• <?php _e('律问网~'); ?></b><br/><b>• <?php _e('专注于解决您的法律问题'); ?></b></p>
+							<?php if (get_setting('integral_system_enabled') == 'Y') { ?>
+							<p><b>• <?php _e('关于积分'); ?>：</b> <?php _e('发起一个问题会消耗您 %s 个积分', -get_setting('integral_system_config_new_question')); ?>, <?php if (get_setting('integral_system_config_answer_change_source') == 'Y') { _e('每多一个回复你将获得 %s 个积分的奖励', -get_setting('integral_system_config_new_answer')); ?> ,<?php } _e('为了您的利益, 在发起问题的时候希望能够更好的描述您的问题以及多使用站内搜索功能'); ?>.</p>
+							<?php } ?>
+						</div>
+					</div>
+					<!-- end 问题发起指南 -->
+				</div>
+				</div>
+				</div>
+				<!-- end 侧边栏 -->
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 弹窗 -->
+<div class="pay-mask-1">
+        <div class="pay-box" style="display: block;">
+            <i class="icon-close"></i>
+            <div class="title">
+                <h2>您选择了 
+                <span class="tt">VIP1</span> 咨询服务
+                <span class="orange mon2">29</span>元，请选择以下方式支付</h2>
+                <p>成功支付后会第一时间审核通过，并且通知专业人员在规定时间内给予解答。</p>
+            </div>
+            <form action="" method="post">
+                <div class="fl">
+                    <div class="wx-tit"></div>
+                    <div class="wx-2vm" id="erweima">
+                        <img alt="扫码支付" src="/static/css/default/img/weixin.jpg">
+                        <script type="text/javascript">
+                            $(function () {
+                                var i = 1;
+                                function show() {
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/index.php?m=content&c=member_pay&a=getstatus",
+                                        data: { orderid: "2018051418191362049" },
+                                        dataType: "json",
+                                        success: function (data) {
+                                            if (data.id > 0) {
+                                                console.log('成功');
+                                                if (typeof (posids) != "undefined" && posids == 32) {
+                                                    $('.da_wrap').hide();
+                                                    $('.rel2').show();
+                                                    setTimeout("window.location.reload()", 3000);
+                                                } else {
+                                                    window.location.href = '/index.php?m=content&c=member_pay&a=success&id=' + data.id + '&key=41e9be793e0d7e722d8d865f47dc1dc9';
+                                                }
+                                                clearInterval(iCount);
+                                            }
+                                            console.log(data);
+                                        }
+                                    });
+                                    i++;
+                                }
+                                var iCount = setInterval(show, 3000);
+                            });
+                        </script>
+                    </div>
+                    <dl>
+                        <dt>
+                            <img src="/static/css/default/img/wxss.png">
+                        </dt>
+                        <dd>
+                            <p>打开微信扫描</p>
+                            <p>二维码完成支付</p>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="fr">
+                    <div class="zfb-tit"></div>
+                    <div class="click">
+                        <a href="/index.php?m=pay&amp;c=pay_ffzx&amp;a=public_ffzx&amp;from=7" id="zfb" target="_blank">
+                            <img src="/static/css/default/img/alixz.png">
+                        </a>
+                    </div>
+                    <dl>
+                        <dt>
+						<a href="/index.php?m=pay&amp;c=pay_ffzx&amp;a=public_ffzx&amp;from=7" id="zfb" target="_blank">
+                            <img src="/static/css/default/img/aldj.png">
+						</a>
+                        </dt>
+                        <dd>
+                            <p>点击进入支付宝</p>
+                            <p>支付宝付款</p>
+                        </dd>
+                    </dl>
+                </div>
+                <p class="hint">如您在付款过程中有任何疑问，您可联系我们的客服邮箱：kefu@lvwen360.com</p>
+            </form>
+        </div>
+    </div>
+<!-- end弹窗 -->
+<script>
+    $(".zxxuanze_ul2").hover(function () {
+        $(".main-pay ul").removeClass("on borderLeft");
+        $(".zxxuanze_ul2").addClass("on");
+        $(".zxxuanze_ul3").addClass("borderLeft");
+    });
+    $(".zxxuanze_ul3").hover(function () {
+        $(".main-pay ul").removeClass("on borderLeft");
+        $(".zxxuanze_ul3").addClass("on");
+        $(".zxxuanze_ul4").addClass("borderLeft");
+    });
+    $(".zxxuanze_ul4").hover(function () {
+        $(".main-pay ul").removeClass("on borderLeft");
+        $(".zxxuanze_ul4").addClass("on");
+    });
+    $('.sbtn').on("click", function () {
+        var wh = $(this).attr('data-id');
+        var url = '/index.php?m=pay&c=pay_ffzx&a=public_weixin_ffzx';
+        if (wh == '1') {
+            $("#zfb").attr('href', '/index.php?m=pay&c=pay_ffzx&a=public_ffzx&from=7');
+            $(".money").html("29.9");
+            $(".mon2").html("29.9");
+            $(".tt").html("VIP1");
+            var wxurl = '/index.php?m=pay&c=pay_ffzx&a=public_weixin_ffzx&from=7';
+        } else if (wh == '3') {
+            $("#zfb").attr('href', '/index.php?m=pay&c=pay_ffzx&a=public_ffzx&from=6');
+            $(".money").html("99.90");
+            $(".mon2").html("99.9");
+            $(".tt").html("vip3");
+            var wxurl = '/index.php?m=pay&c=pay_ffzx&a=public_weixin_ffzx&from=6';
+        } else {
+            $("#zfb").attr('href', '/index.php?m=pay&c=pay_ffzx&a=public_ffzx');
+            $(".money").html("59.90");
+            $(".mon2").html("59.9");
+            $(".tt").html("VIP2");
+            var wxurl = '/index.php?m=pay&c=pay_ffzx&a=public_weixin_ffzx';
+        }
+        //加载微信图片
+
+        $('.pay-mask-1').show();
+    })
+    $('.icon-close').on("click", function () {
+        $('.pay-mask-1').hide();
+    })
+
+    $(".notice").mouseover(function () {
+        $(".time").css("display", "block");
+        $(".notice").mouseout(function () {
+            $(".time").css("display", "none")
+        });
+    })
+
+
+</script>
+<script type="text/javascript">
+	var ATTACH_ACCESS_KEY = '<?php echo $this->attach_access_key; ?>';
+	var CATEGORY_ID = <?php echo $this->question_info['category_id']; ?>;
+	var PUBLISH_TYPE = 'question';
+</script>
+
+<?php TPL::output('global/footer.tpl.htm'); ?>

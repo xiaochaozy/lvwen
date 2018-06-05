@@ -1,0 +1,188 @@
+<?php TPL::output('m/header.tpl.htm'); ?>
+
+<!-- 标题 -->
+<div class="aw-title">
+	<?php _e('在线支付'); ?>
+</div>
+<!-- end 标题 -->
+<!-- 内容 -->
+    <div class="container active">
+        <div class="choosed-vip-type">
+            <div class="kown">选择以下服务获取专业律师帮助！</div>
+            <a href="">
+                <div class="vip-type1">
+                    <div class="vip-randinfo">
+                        <div class="vip-pic">
+                        <img class="vip-img" src="static/mobile/img/vip.png" alt="">
+						<p>VIP1</p>
+                        </div>
+                        <div class="info-con">
+                            <p>审核时间：＜10分钟</p>
+                            <p>解答时间：150分钟以内</p>
+                            <p>解答提醒：短信通知1次</p>
+                            <p>金额￥：
+							<span class="text-red">29.9</span>元，选择率<span class="text-red">6%</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pull-right2">
+                        <img src="static/mobile/img/right.png" alt="">
+                    </div>
+                </div>
+            </a>
+            <a href="">
+                    <div class="vip-type1">
+                        <div class="vip-randinfo">
+                            <div class="vip-pic">
+                                <img class="vip-img" src="static/mobile/img/vip.png" alt="">
+                                <p>VIP2</p>
+                            </div>
+                            <div class="info-con">
+                                <p> 审核时间：＜1分钟</p>
+                                <p> 解答时间：60分钟以内</p>
+                                <p>解答提醒：短信通知1次</p>
+								<p>金额￥：
+							    <span class="text-red">59.9</span>元，选择率<span class="text-red">83%</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="pull-right2">
+                        <img src="static/mobile/img/right.png" alt="">
+                        </div>
+                    </div>
+                </a>
+                <a href="">
+                        <div class="vip-type1">
+                            <div class="vip-randinfo">
+                                <div class="vip-pic">
+                                    <img class="vip-img" src="static/mobile/img/vip.png" alt="">
+                                    <p>VIP3</p>
+                                </div>
+                                <div class="info-con">
+                                    <p> 审核时间：＜1分钟</p>
+                                    <p> 解答时间：30分钟以内</p>
+                                    <p>解答提醒：不限次数</p>
+									<p>金额￥：
+							        <span class="text-red">99.9</span>元，选择率<span class="text-red">11%</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="pull-right2">
+                                <img src="static/mobile/img/right.png" alt="">
+                            </div>
+                        </div>
+                    </a>
+        </div>
+        <div class="must">
+            <p><b>服务说明指南：</b> </p>   
+              <p><b>• 服务内容：</b>本服务只包含咨询内容解答服务，不包含合同审查、撰写等律师实务。</p> 
+              <p><b>• 服务领域：</b> 计划生育/户口/中奖/加盟/退休/退伍等不属于法律问题，律师无法给予合理解答</p>
+              <p><b>• 服务时间：</b>支付成功后将在约定时间内在线解答 （工作日9:00-18:00，周六周日以及法定节假日发布的问题，会顺延至工作日后的12小时内进行解答）。</p>  
+              <p><b>• 服务方式：</b>咨询发布口，将进入审核环节，随后进入解答环节，所有服务将在线完成，一经支付不予退款。</p> 
+        </div>
+    </div>
+<!-- end 内容 -->
+<script type="text/javascript">
+	var CATEGORY_ID = <?php echo $this->question_info['category_id']; ?>;
+	var ATTACH_ACCESS_KEY = '<?php echo $this->attach_access_key; ?>';
+	var PUBLISH_TYPE = 'question';
+
+	$(document).ready(function () {
+
+		$('.aw-add-topic-box').click();
+
+		// 判断是否微信打开
+		if (typeof window.WeixinJSBridge != 'undefined')
+		{
+			$('header, nav, footer').hide();
+		}
+
+		if (ATTACH_ACCESS_KEY != '')
+		{
+			var fileupload = new FileUpload('file' ,'.aw-upload-box .icon-pic', '.aw-upload-box .upload-container', G_BASE_URL + '/publish/ajax/attach_upload/id-question__attach_access_key' + '-' + ATTACH_ACCESS_KEY, {'insertTextarea' : '#publish_detail', 'deleteBtnTemplate' : '<a class="delete-file"><i class="icon icon-delete"></i></a>', 'insertBtnTemplate' : '<a class="insert-file"><i class="icon icon-insert"></i></a>', 'editor': $('#publish_detail')});
+		}
+
+		if ($('#category_id').length)
+		{
+			var category_data = '';
+
+			$.each($('#category_id option').toArray(), function (i, field) {
+				if (i > 0)
+				{
+					if (i > 1)
+					{
+						category_data += ',';
+					}
+
+					category_data += "{'title':'" + $(field).text() + "', 'id':'" + $(field).val() + "'}";
+				}
+			});
+
+			//AWS.Dropdown.add_dropdown_list('.aw-publish-dropdown', eval('[' + category_data + ']'), CATEGORY_ID);
+
+			$('.aw-publish-dropdown .dropdown-menu li a').click(function() {
+				$('#category_id').val($(this).attr('data-value'));
+			});
+		}
+
+		if ($('.aw-publish-dropdown').length)
+		{
+			$.each($('.aw-publish-dropdown .dropdown-menu li a'),function(i, e)
+			{
+				if ($(e).attr('data-value') == $('#category_id').val())
+				{
+					$('.aw-publish-dropdown span').html($(e).html());
+
+					return;
+				}
+			});
+		}
+
+		if ($('#quick_publish_topic_chooser').length)
+		{
+			$('#quick_publish_topic_chooser').click();
+		}
+
+		if ($('#question_id').length)
+		{
+			ITEM_ID = $('#question_id').val();
+		}
+		else if ($('#article_id').length)
+		{
+			ITEM_ID = $('#article_id').val();
+		}
+
+		// 微信图片发起
+		if ($('input[name="weixin_pic_url"]').val() != undefined)
+		{
+			$('.upload-list').append(
+				'<li>'+
+					'<div class="img" style="background-image: url(' + $('input[name="weixin_pic_url"]').val() + ');"></div>'+
+					'<div class="content">'+
+						'<p class="meta">'+
+							'<span class="color-999">图片已插入</span>'+
+							'<a class="insert-file disabled"><i class="icon icon-insert"></i></a>'+
+						'</p>'+
+					'</div>'+
+				'</li>');
+		}
+
+		if (ITEM_ID && G_UPLOAD_ENABLE == 'Y' && ATTACH_ACCESS_KEY != '')
+		{
+			if ($(".aw-upload-box .upload-list").length) {
+				$.post(G_BASE_URL + '/publish/ajax/' + PUBLISH_TYPE + '_attach_edit_list/', PUBLISH_TYPE + '_id=' + ITEM_ID, function (data) {
+					if (data['err']) {
+						return false;
+					} else {
+						$.each(data['rsm']['attachs'], function (i, v) {
+						   fileupload.setFileList(v);
+						});
+					}
+				}, 'json');
+			}
+		}
+
+	});
+</script>
+
+<?php TPL::output('m/footer1.tpl.htm'); ?>

@@ -1,0 +1,162 @@
+<?php TPL::output('m/header.tpl.htm'); ?>
+
+<!-- 标题 -->
+<div class="aw-title">
+	<?php _e('在线支付'); ?>
+</div>
+<!-- end 标题 -->
+
+<!-- 内容 -->
+<div class="container active">
+        <div class="dd_xq">
+            <div class="zhifu-r">
+                <div class="box1">
+                    <p><b>服务项目：</b><span>VIP1咨询服务</span></p>
+                </div>
+                <div class="box1">
+                    <p><b>咨询内容：</b>孩子不小心从楼梯上滚不小心从楼梯上不小心从楼梯上不小心从楼梯上不小心从楼梯上下来了</p>
+                </div>
+                <div class="box1">
+                    <p><b>支付金额：</b><span>￥19.90元</span></p>
+                </div>
+            </div>
+            <div class="zhifu_way">
+                <p class="chose">选择支付方式</p>
+                <a href="javascript:gotoh5pay('192266');">
+                    <div class="zf-wx">
+                        <img src="static/mobile/img/wxzf.png" class="pic">
+                        <div class="pg">
+                            <b>微信支付</b>
+                            <p>点击支付，既可获取专业解答！</p>
+                        </div>
+                        <img src="static/mobile/img/right.png" class="pic-r">
+                    </div>
+                </a>
+                <a href="javascript:gotopay('192266');">
+                    <div class="zf-zfb">
+                        <img src="static/mobile/img/zfb.png" class="pic">
+                        <div class="pg">
+                            <b>支付宝支付</b>
+                            <p>点击支付，即可获取专业解答！</p>
+                        </div>
+                    <img src="static/mobile/img/right.png" class="pic-r">
+                    </div>
+                </a>
+                <script>
+                    function gotopay(sid) {
+                        window.location.href = "/index.php/Home/Wine/alipay/type/helpadd/id/" + sid + ".html";
+                    }
+
+                    function gotoh5pay(sid) {
+                        window.location.href = "/index.php/Home/Hfivepay/hwxpay/type/helpadd/id/" + sid + ".html";
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+<!-- end 内容 -->
+
+<script type="text/javascript">
+	var CATEGORY_ID = <?php echo $this->question_info['category_id']; ?>;
+	var ATTACH_ACCESS_KEY = '<?php echo $this->attach_access_key; ?>';
+	var PUBLISH_TYPE = 'question';
+
+	$(document).ready(function () {
+
+		$('.aw-add-topic-box').click();
+
+		// 判断是否微信打开
+		if (typeof window.WeixinJSBridge != 'undefined')
+		{
+			$('header, nav, footer').hide();
+		}
+
+		if (ATTACH_ACCESS_KEY != '')
+		{
+			var fileupload = new FileUpload('file' ,'.aw-upload-box .icon-pic', '.aw-upload-box .upload-container', G_BASE_URL + '/publish/ajax/attach_upload/id-question__attach_access_key' + '-' + ATTACH_ACCESS_KEY, {'insertTextarea' : '#publish_detail', 'deleteBtnTemplate' : '<a class="delete-file"><i class="icon icon-delete"></i></a>', 'insertBtnTemplate' : '<a class="insert-file"><i class="icon icon-insert"></i></a>', 'editor': $('#publish_detail')});
+		}
+
+		if ($('#category_id').length)
+		{
+			var category_data = '';
+
+			$.each($('#category_id option').toArray(), function (i, field) {
+				if (i > 0)
+				{
+					if (i > 1)
+					{
+						category_data += ',';
+					}
+
+					category_data += "{'title':'" + $(field).text() + "', 'id':'" + $(field).val() + "'}";
+				}
+			});
+
+			//AWS.Dropdown.add_dropdown_list('.aw-publish-dropdown', eval('[' + category_data + ']'), CATEGORY_ID);
+
+			$('.aw-publish-dropdown .dropdown-menu li a').click(function() {
+				$('#category_id').val($(this).attr('data-value'));
+			});
+		}
+
+		if ($('.aw-publish-dropdown').length)
+		{
+			$.each($('.aw-publish-dropdown .dropdown-menu li a'),function(i, e)
+			{
+				if ($(e).attr('data-value') == $('#category_id').val())
+				{
+					$('.aw-publish-dropdown span').html($(e).html());
+
+					return;
+				}
+			});
+		}
+
+		if ($('#quick_publish_topic_chooser').length)
+		{
+			$('#quick_publish_topic_chooser').click();
+		}
+
+		if ($('#question_id').length)
+		{
+			ITEM_ID = $('#question_id').val();
+		}
+		else if ($('#article_id').length)
+		{
+			ITEM_ID = $('#article_id').val();
+		}
+
+		// 微信图片发起
+		if ($('input[name="weixin_pic_url"]').val() != undefined)
+		{
+			$('.upload-list').append(
+				'<li>'+
+					'<div class="img" style="background-image: url(' + $('input[name="weixin_pic_url"]').val() + ');"></div>'+
+					'<div class="content">'+
+						'<p class="meta">'+
+							'<span class="color-999">图片已插入</span>'+
+							'<a class="insert-file disabled"><i class="icon icon-insert"></i></a>'+
+						'</p>'+
+					'</div>'+
+				'</li>');
+		}
+
+		if (ITEM_ID && G_UPLOAD_ENABLE == 'Y' && ATTACH_ACCESS_KEY != '')
+		{
+			if ($(".aw-upload-box .upload-list").length) {
+				$.post(G_BASE_URL + '/publish/ajax/' + PUBLISH_TYPE + '_attach_edit_list/', PUBLISH_TYPE + '_id=' + ITEM_ID, function (data) {
+					if (data['err']) {
+						return false;
+					} else {
+						$.each(data['rsm']['attachs'], function (i, v) {
+						   fileupload.setFileList(v);
+						});
+					}
+				}, 'json');
+			}
+		}
+
+	});
+</script>
+
+<?php TPL::output('m/footer1.tpl.htm'); ?>

@@ -1,0 +1,132 @@
+<?php TPL::output('m/header.tpl.htm'); ?>
+
+<!-- 标题 -->
+<div class="aw-title">
+	<?php _e('提交成功'); ?>
+</div>
+<!-- end 标题 -->
+<!-- 内容 -->
+    <div class="container active">
+        <div class="dd_xq">
+            <div class="cg-titile">您的“VIP1”咨询服务支付成功。</div>
+            <div class="cg-dd">
+                <div class="cg-dd-xc">
+                    <p><b>服务项目：</b>VIP1咨询服务</p>
+                    <p><b>解答时间：</b> 2018-03-20 15:57之前</p>
+                    <p><b>短信通知：</b>前1位解答短信提醒</p>
+                    <p><b>支付金额：</b><span>￥19.90元</span></p>
+                </div>
+                <div class="cg-dd-xx">
+                    <b>在线查看回复</b>
+                    <p>1) 关注<a href="">个人动态</a>消息通知</p>
+                    <p>2) <a href="">点击查看</a> 该问题</p>
+                    <p>3) 注意接收短信通知。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- end 内容 -->
+<script type="text/javascript">
+	var CATEGORY_ID = <?php echo $this->question_info['category_id']; ?>;
+	var ATTACH_ACCESS_KEY = '<?php echo $this->attach_access_key; ?>';
+	var PUBLISH_TYPE = 'question';
+
+	$(document).ready(function () {
+
+		$('.aw-add-topic-box').click();
+
+		// 判断是否微信打开
+		if (typeof window.WeixinJSBridge != 'undefined')
+		{
+			$('header, nav, footer').hide();
+		}
+
+		if (ATTACH_ACCESS_KEY != '')
+		{
+			var fileupload = new FileUpload('file' ,'.aw-upload-box .icon-pic', '.aw-upload-box .upload-container', G_BASE_URL + '/publish/ajax/attach_upload/id-question__attach_access_key' + '-' + ATTACH_ACCESS_KEY, {'insertTextarea' : '#publish_detail', 'deleteBtnTemplate' : '<a class="delete-file"><i class="icon icon-delete"></i></a>', 'insertBtnTemplate' : '<a class="insert-file"><i class="icon icon-insert"></i></a>', 'editor': $('#publish_detail')});
+		}
+
+		if ($('#category_id').length)
+		{
+			var category_data = '';
+
+			$.each($('#category_id option').toArray(), function (i, field) {
+				if (i > 0)
+				{
+					if (i > 1)
+					{
+						category_data += ',';
+					}
+
+					category_data += "{'title':'" + $(field).text() + "', 'id':'" + $(field).val() + "'}";
+				}
+			});
+
+			//AWS.Dropdown.add_dropdown_list('.aw-publish-dropdown', eval('[' + category_data + ']'), CATEGORY_ID);
+
+			$('.aw-publish-dropdown .dropdown-menu li a').click(function() {
+				$('#category_id').val($(this).attr('data-value'));
+			});
+		}
+
+		if ($('.aw-publish-dropdown').length)
+		{
+			$.each($('.aw-publish-dropdown .dropdown-menu li a'),function(i, e)
+			{
+				if ($(e).attr('data-value') == $('#category_id').val())
+				{
+					$('.aw-publish-dropdown span').html($(e).html());
+
+					return;
+				}
+			});
+		}
+
+		if ($('#quick_publish_topic_chooser').length)
+		{
+			$('#quick_publish_topic_chooser').click();
+		}
+
+		if ($('#question_id').length)
+		{
+			ITEM_ID = $('#question_id').val();
+		}
+		else if ($('#article_id').length)
+		{
+			ITEM_ID = $('#article_id').val();
+		}
+
+		// 微信图片发起
+		if ($('input[name="weixin_pic_url"]').val() != undefined)
+		{
+			$('.upload-list').append(
+				'<li>'+
+					'<div class="img" style="background-image: url(' + $('input[name="weixin_pic_url"]').val() + ');"></div>'+
+					'<div class="content">'+
+						'<p class="meta">'+
+							'<span class="color-999">图片已插入</span>'+
+							'<a class="insert-file disabled"><i class="icon icon-insert"></i></a>'+
+						'</p>'+
+					'</div>'+
+				'</li>');
+		}
+
+		if (ITEM_ID && G_UPLOAD_ENABLE == 'Y' && ATTACH_ACCESS_KEY != '')
+		{
+			if ($(".aw-upload-box .upload-list").length) {
+				$.post(G_BASE_URL + '/publish/ajax/' + PUBLISH_TYPE + '_attach_edit_list/', PUBLISH_TYPE + '_id=' + ITEM_ID, function (data) {
+					if (data['err']) {
+						return false;
+					} else {
+						$.each(data['rsm']['attachs'], function (i, v) {
+						   fileupload.setFileList(v);
+						});
+					}
+				}, 'json');
+			}
+		}
+
+	});
+</script>
+
+<?php TPL::output('m/footer.tpl.htm'); ?>

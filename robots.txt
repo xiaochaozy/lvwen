@@ -1,0 +1,15 @@
+#
+# robots.txt for WeCenter
+#
+
+User-agent: *
+Disallow:/
+Disallow: /app/
+Disallow: /cache/
+Disallow: /install/
+Disallow: /models/
+Disallow: /system/
+Disallow: /tmp/
+Disallow: /views/
+Disallow: /static/
+Disallow: /?/admin/
