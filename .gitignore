@@ -1,3 +1,4 @@
 app/pay/config.php
+app/weixinpay/classes/WxPay.Config.php
 system/config/database.php
 wecenter.sql

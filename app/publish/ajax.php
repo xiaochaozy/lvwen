@@ -353,7 +353,7 @@ class ajax extends AWS_CONTROLLER
         }
 
         if (!$_POST['question_content']) {
-            H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('请输入问题标题')));
+            //H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('请输入问题标题')));
         }
 
         if (get_setting('category_enable') == 'N') {
@@ -365,7 +365,7 @@ class ajax extends AWS_CONTROLLER
         }
 
         if (cjk_strlen($_POST['question_content']) < 5) {
-            H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('问题标题字数不得少于 5 个字')));
+            //H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('问题标题字数不得少于 5 个字')));
         }
 
         if (get_setting('question_title_limit') > 0 AND cjk_strlen($_POST['question_content']) > get_setting('question_title_limit')) {
@@ -486,7 +486,7 @@ class ajax extends AWS_CONTROLLER
             $_POST['question_detail']
         ))) {
             $this->model('publish')->publish_approval('question', array(
-                'question_content' => $_POST['question_content'],
+                'question_content' => str_cut($_POST['question_detail'],30),
                 'question_detail' => $_POST['question_detail'],
                 'category_id' => $_POST['category_id'],
                 'topics' => $_POST['topics'],
@@ -511,7 +511,8 @@ class ajax extends AWS_CONTROLLER
 
                 $url = get_js_url('/m/question/' . $question_id);
             } else {
-                $url = get_js_url('/question/' . $question_id);
+                //$url = get_js_url('/question/' . $question_id);
+                  $url = get_js_url('/publish/pay/' . $question_id);
             }
 
             H::ajax_json_output(AWS_APP::RSM(array(
