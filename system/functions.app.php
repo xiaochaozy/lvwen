@@ -451,3 +451,117 @@ function ip() {
     }
 	return preg_match ( '/[\d\.]{7,15}/', $ip, $matches ) ? $matches [0] : '';
 }
+
+function getcache($filename){
+	define("BASE_PATH",str_ireplace(str_replace("/","\\",$_SERVER['PHP_SELF']),'',__FILE__)."\\");
+    return include(BASE_PATH.'system'.DIRECTORY_SEPARATOR.'file'.DIRECTORY_SEPARATOR.$filename.'.cache.php');
+}
+
+function get_real_city($ip='') {
+    if(!$ip){
+        $ip=ip();
+    }
+    if(strpos($ip, '127') === 0 || strpos($ip, '192') === 0)
+    {
+        $ip='222.173.27.115';
+    }
+    //新版ip库 下载地址http://www.ipip.net/download.html 更新版本日期20170704  updatebychao
+        $ipcity = pc_base::load_sys_class('IP');
+        $res=$ipcity->find($ip);
+        $province=$res[1];
+        $city=$res[2];
+        $wcity = getcache('newipcity');
+        foreach($wcity as $k1=>$r1){
+            if($r1[0]==$city){
+                $city=$r1[1];
+                break;
+            }
+        }
+	//匹配改地区对应的linkageid
+	$city_cache = getcache('1');
+	$city_cache = $city_cache['data'];
+	
+	$province_id = $city_id = 0;
+	
+	if ($province != '未知' && !empty($province)){
+		//匹配省	
+		foreach ($city_cache as $v){
+			if (empty($v['parentid'])){
+				if (strpos($v['name'], $province) !== false){
+					$province_id = $v['linkageid'];
+					$province_py = $v['spell'];
+					$province_name = $v['name'];
+					$prov_classify=$v['classify'];
+					break;
+				}
+			}
+		}
+		/**
+		 * 主要解决的是直辖市问题
+		 * ip地址到北京市。（找了上面的省，再找下面的市时$city_id为0）
+		 */
+		if(!in_array($province,array('北京','上海','重庆','天津','香港','澳门')) && !empty($city)){
+			//匹配市
+			foreach ($city_cache as $v){
+				if ($v['parentid'] == $province_id){
+					if (strpos($v['name'], $city) !== false){
+						$city_id = $v['linkageid'];
+						$city_py = $v['spell'];
+						$city_name = $v['name'];
+						$city_classify=$v['classify'];
+						break;
+					}
+				}
+			}
+		}else{
+			$city_id = $province_id;
+			$city_py = $province_py;
+			$city_classify = $prov_classify;
+		}
+	}
+	unset($city_cache);
+	//构造返回数组
+	if ($city_id==0) $city_id = $province_id;
+	if ($city_id==0) $city_id = 261;
+	
+	$subsite_list = getcache('substation_1');
+		foreach ($subsite_list as $v){    //匹配省份URL
+			if (empty($v['parentid'])){
+				if ($v['linkageid'] == $province_id){
+					$province_url = $v['url'];
+					break;
+				}
+			}
+		}
+		foreach ($subsite_list as $v){    //匹配城市URL
+			if ($v['parentid'] == $province_id){
+				if ($v['linkageid'] == $city_id){
+					$city_url = $v['url'];
+					break;
+				}
+			}
+		}
+	unset($subsite_list);
+	if($province_id<6)
+		$city_url =  $province_url ;
+	
+	$real_city = array(
+		'ip' => $ip,
+		's' => $province,
+		'c' => $city,
+		's_areaid' => $province_id,
+		'areaid' => $city_id,		
+        'c_areaid' => $city_id,		
+		's_areapy' => $province_py,
+		'c_areapy' => $city_py,		
+		's_arean' => $province_name,
+		'c_arean' => $city_name,
+		's_url' => $province_url,
+		'c_url' => $city_url,
+		's_level'=>$prov_classify,
+		'c_level'=>$city_classify
+
+	);
+	
+	return $real_city;
+}

@@ -1,1 +1,0 @@
-a:2:{s:18:"aws_external_class";s:57:"E:\web_github\lvwen/plugins/aws_external/aws_external.php";s:26:"aws_offical_external_class";s:73:"E:\web_github\lvwen/plugins/aws_offical_external/aws_offical_external.php";}
