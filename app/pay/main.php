@@ -35,8 +35,8 @@ class main extends AWS_CONTROLLER
 
 	public function index_action()
 	{		
-			$trade_sn=$this->model('pay')->order($this->user_id);
-			if(isset($_POST['dosubmit'])){
+			$uid=$this->user_id?$this->user_id:0;
+			if(isset($_GET['topay'])){
 			require_once 'config.php';
 //exit(var_dump(dirname(__FILE__)));
 require_once dirname(__FILE__).'/pagepay/service/AlipayTradeService.php';
@@ -44,17 +44,13 @@ require_once dirname(__FILE__).'/pagepay/service/AlipayTradeService.php';
 require_once dirname(__FILE__).'/pagepay/buildermodel/AlipayTradePagePayContentBuilder.php';
 
     //商户订单号，商户网站订单系统中唯一订单号，必填
-    $out_trade_no = trim($_POST['WIDout_trade_no']);
-
+    $out_trade_no =$this->model('pay')->order($uid);
     //订单名称，必填
-    $subject = trim($_POST['WIDsubject']);
-
+    $subject = '测试测试';
     //付款金额，必填
-    $total_amount = trim($_POST['WIDtotal_amount']);
-
+    $total_amount = 0.01;
     //商品描述，可空
     $body = trim($_POST['WIDbody']);
-
 	//构造参数
 	$payRequestBuilder = new AlipayTradePagePayContentBuilder();
 	$payRequestBuilder->setBody($body);
@@ -75,10 +71,10 @@ require_once dirname(__FILE__).'/pagepay/buildermodel/AlipayTradePagePayContentB
 
 	//输出表单
 	var_dump($response);
-			}else{
-				TPL::assign('trade_sn', $trade_sn);
+	}else{
+			TPL::assign('trade_sn', $trade_sn);
 			TPL::output('pay/pagepay');
-			}
+	}
 			
 	}
 	

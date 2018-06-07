@@ -37,26 +37,27 @@ class main extends AWS_CONTROLLER
 		$notify = new NativePay();
 		$input = new WxPayUnifiedOrder();
         
-		$orderinfo=$this->model('pay')->getorder(28);
+		$orderinfo=$this->model('pay')->getorder(3);
 		$orderid=$orderinfo['trade_sn'];
+		$orderinfo['contactname']='测试';
 		$input->SetBody($orderinfo['contactname']);
 		$input->SetAttach($orderinfo['contactname']);
 		$input->SetGoods_tag($orderinfo['contactname']);
-		$money=$orderinfo['money']*100;
-
+		$money=0.01*100;
 		$time=time();
 		$ip=ip();
 		$input->SetOut_trade_no($orderid);
 		$input->SetTotal_fee($money);
 		$input->SetTime_start(date("YmdHis"));
 		$input->SetTime_expire(date("YmdHis", time() + 600));
-		$input->SetNotify_url("http://www.XXXXX.cn/weixinceshi/notify/");
+		$input->SetNotify_url("http://www.lvwen360.com/?/weixinpay/notify/");
 		//$input->SetTrade_type("MWEB");
 		$input->SetTrade_type("NATIVE");
 		$input->SetProduct_id("123456789");
         $input->SetSpbill_create_ip($ip);
         //echo $input->GetSpbill_create_ip();
         //echo '<br/>';
+		
 		try
  		{
 			$result = $notify->GetPayUrl($input);
@@ -65,10 +66,11 @@ class main extends AWS_CONTROLLER
  		{
  			echo 'Message: ' .$e->getMessage();
  		}
+		echo "<img src=".$result["code_url"]." width='200' height='200'>";
 		exit(var_dump($result));
         $key=md5('XXXXXpay'.date("md"));
 
-        $redirect='http://wap.XXXXX.cn/lawfufei/'.$orderinfo['zxid'].'.html?rnd='.$orderid;
+        $redirect='http://www.lvwen360.com/?/weixinpay/succ/';
         $result['mweb_url'].='&redirect_url='.urlencode($redirect);
 
         $tmpInfo = json_encode($result);

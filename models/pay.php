@@ -23,13 +23,13 @@ class pay_class extends AWS_MODEL
 	public function order($uid)
 	{
 		$trade_sn=create_sn();
-		
 		$this->insert('pay_account', array(
 			'trade_sn' =>$trade_sn,
 			'userid' => $uid,
 			'ip'=>ip(),
 			'addtime' => time()
 		));
+		
 		return $trade_sn;
 
 	}
