@@ -453,8 +453,11 @@ function ip() {
 }
 
 function getcache($filename){
-	define("BASE_PATH",str_ireplace(str_replace("/","\\",$_SERVER['PHP_SELF']),'',__FILE__)."\\");
-    return include(BASE_PATH.'system'.DIRECTORY_SEPARATOR.'file'.DIRECTORY_SEPARATOR.$filename.'.cache.php');
+	if (defined('ROOT_PATH')) {	
+	}else{
+		define("ROOT_PATH",str_ireplace(str_replace("/","\\",$_SERVER['PHP_SELF']),'',__FILE__)."\\");	
+	}
+    return include(ROOT_PATH.'system'.DIRECTORY_SEPARATOR.'file'.DIRECTORY_SEPARATOR.$filename.'.cache.php');
 }
 
 function get_real_city($ip='') {
@@ -466,7 +469,8 @@ function get_real_city($ip='') {
         $ip='222.173.27.115';
     }
     //新版ip库 下载地址http://www.ipip.net/download.html 更新版本日期20170704  updatebychao
-        $ipcity = pc_base::load_sys_class('IP');
+		include(ROOT_PATH.'system'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'IP.class.php');
+		$ipcity = new IP();
         $res=$ipcity->find($ip);
         $province=$res[1];
         $city=$res[2];
@@ -556,12 +560,37 @@ function get_real_city($ip='') {
 		'c_areapy' => $city_py,		
 		's_arean' => $province_name,
 		'c_arean' => $city_name,
-		's_url' => $province_url,
-		'c_url' => $city_url,
+		//'s_url' => $province_url,
+		//'c_url' => $city_url,
 		's_level'=>$prov_classify,
 		'c_level'=>$city_classify
 
 	);
 	
 	return $real_city;
+}
+
+/**
+ * 生成随机字符串
+ * @param string $lenth 长度
+ * @return string 字符串
+ */
+function create_randomstr($lenth = 6) {
+	return random($lenth, '123456789abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ');
+}
+/**
+* 产生随机字符串
+*
+* @param    int        $length  输出长度
+* @param    string     $chars   可选的 ，默认为 0123456789
+* @return   string     字符串
+*/
+function random($length, $chars = '0123456789') {
+	$hash = '';
+	$max = strlen($chars) - 1;
+	mt_srand();
+	for($i = 0; $i < $length; $i++) {
+		$hash .= $chars[mt_rand(0, $max)];
+	}
+	return $hash;
 }

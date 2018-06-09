@@ -345,7 +345,13 @@ class ajax extends AWS_CONTROLLER
     public function publish_question_action()
     {
         if (!$this->user_info['permission']['publish_question']) {
-            H::ajax_json_output(AWS_APP::RSM(null, '-1', AWS_APP::lang()->_t('你没有权限发布问题')));
+			//游客自动创建用户 
+			$pas=rand(111111,999999);
+			$username=strtolower(create_randomstr(4)).time();
+			$this->user_id = $this->model('account')->user_register($username,$pas,$username.'@lvwen.com');
+			$user_info = $this->model('account')->get_user_info_by_uid($this->user_id);
+			$this->model('account')->setcookie_login($this->user_id,$user_info['user_name'],$pas,$user_info['salt']);
+            //H::ajax_json_output(AWS_APP::RSM(null, '-1', AWS_APP::lang()->_t('你没有权限发布问题')));
         }
 
         if ($this->user_info['integral'] < 0 AND get_setting('integral_system_enabled') == 'Y') {
@@ -354,6 +360,10 @@ class ajax extends AWS_CONTROLLER
 
         if (!$_POST['question_content']) {
             //H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('请输入问题标题')));
+        }
+	if (!$_POST['question_mobile'])
+        {
+            H::ajax_json_output(AWS_APP::RSM(null, - 1, AWS_APP::lang()->_t('请输入手机号码')));
         }
 
         if (get_setting('category_enable') == 'N') {

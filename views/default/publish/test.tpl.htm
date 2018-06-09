@@ -15,9 +15,9 @@
 <script src="http://img.9ask.cn/statics/www9ask2014/js/jquery-1.10.1.min.js"></script>
 <script type="text/javascript" src="http://www.lvwen.com/static/js/leray_area.js"></script>
 <script type="text/javascript">
-    leray_load_area('17',0,0,"info[prov],info[city],info[qxid]",1);
-    leray_load_area('261','17',1,"info[prov],info[city],info[qxid]",1);
-    leray_load_area('17','261',2,"info[prov],info[city],info[qxid]",2)
+    leray_load_area("<?php echo $this->iparea['s_areaid']; ?>",0,0,"provid,cityid,qxid",1);
+    leray_load_area("<?php echo $this->iparea['c_areaid']; ?>","<?php echo $this->iparea['s_areaid']; ?>",1,"provid,cityid,qxid",1);
+    leray_load_area("<?php echo $this->iparea['s_areaid']; ?>","<?php echo $this->iparea['c_areaid']; ?>",2,"provid,cityid,qxid",2)
 </script>
 
 </body>

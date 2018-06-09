@@ -303,6 +303,10 @@ class main extends AWS_CONTROLLER
 		TPL::output('publish/succ');
 	}
 	public function test_action(){
+		$iparea=get_real_city();
+		TPL::assign('iparea', $iparea);
+		$username=strtolower(create_randomstr(4)).time();
+		exit(var_dump($username));
 		TPL::output('publish/test');
 	}
 }

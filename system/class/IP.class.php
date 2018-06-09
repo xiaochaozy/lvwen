@@ -9,7 +9,7 @@
     数据问题请加 QQ 群: 346280296
     Code for PHP 5.3+ only
 */
-define("CITY_FILE", PC_PATH.DIRECTORY_SEPARATOR.'libs'.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'ipdata'.DIRECTORY_SEPARATOR.'17monipdb.dat');
+define("CITY_FILE", ROOT_PATH.DIRECTORY_SEPARATOR.'system'.DIRECTORY_SEPARATOR.'file'.DIRECTORY_SEPARATOR.'ipdata'.DIRECTORY_SEPARATOR.'17monipdb.dat');
 class IP
 {
     private static $ip     = NULL;
