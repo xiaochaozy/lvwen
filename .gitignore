@@ -1,5 +1,6 @@
 app/pay/config.php
 app/weixinpay/classes/WxPay.Config.php
 system/config/database.php
+cache
 wecenter.sql
 lvwen.sql
