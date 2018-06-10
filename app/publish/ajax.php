@@ -376,6 +376,9 @@ class ajax extends AWS_CONTROLLER
 
         if (cjk_strlen($_POST['question_content']) < 5) {
             //H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('问题标题字数不得少于 5 个字')));
+			$_POST['question_content']=str_cut($_POST['question_detail'],30);
+			
+			//H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('1111')));
         }
 
         if (get_setting('question_title_limit') > 0 AND cjk_strlen($_POST['question_content']) > get_setting('question_title_limit')) {
@@ -510,6 +513,7 @@ class ajax extends AWS_CONTROLLER
                 'url' => get_js_url('/publish/wait_approval/')
             ), 1, null));
         } else {
+			
             $question_id = $this->model('publish')->publish_question($_POST['question_content'], $_POST['question_detail'], $_POST['category_id'], $this->user_id, $_POST['topics'], $_POST['anonymous'], $_POST['attach_access_key'], $_POST['ask_user_id'], $this->user_info['permission']['create_topic']);
 
             if ($_POST['_is_mobile']) {

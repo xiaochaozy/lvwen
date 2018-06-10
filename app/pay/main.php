@@ -98,7 +98,8 @@ if($result) {//验证成功
 	//支付宝交易号
 	$trade_no = htmlspecialchars($_GET['trade_no']);
 	$res=$this->model('pay')->success($out_trade_no);	
-	echo "验证成功<br />支付宝交易号：".$trade_no;
+	//echo "验证成功<br />支付宝交易号：".$trade_no;
+	TPL::output('pay/succ');
 }
 else {
     //验证失败

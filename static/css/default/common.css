@@ -768,6 +768,7 @@ blockquote {margin: 0 40px;padding: 0 15px;font-size: 14px;color: #777;border-le
 .aw-editor-box textarea {height: 260px;}
 .are-tilel {display: inline-block}
 .selectpicker {width: 95px;margin-left: 5px;text-align: center;display: inline-block}
+.diqu select{width: 95px;margin-left: 5px;text-align: center;display: inline-block;padding: 6px;resize:none;box-shadow: none;border-color: #ccc;border-radius: 4px;}
 .selectpicker2 {width: 172px;margin-left: 5px;text-align: center;display: inline-block}
 .ar-hold {font-size: 13px;color: #6d6b6b;}
 .text-danger {color: #e2110c;}

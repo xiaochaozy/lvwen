@@ -69,21 +69,16 @@
 								<?php if (!$this->question_info['question_id']) { ?>
                                 <!-- 地区选择 -->
                                 <h3 class="are-tilel"><?php _e('选择地区'); ?>:</h3>
-								<select class="selectpicker form-control">
-                                    <option>山东</option>
-                                    <option>河北</option>
-                                    <option>北京</option>
-                                </select>
-                                <select class="selectpicker form-control">
-                                    <option>济南</option>
-                                    <option>青岛</option>
-                                    <option>北京</option>
-                                </select>
-                                <select class="selectpicker form-control">
-                                    <option>历下区</option>
-                                    <option>高新区</option>
-                                    <option>历城区</option>
-                                </select>
+                        <span id="area_0" class="diqu"></span>
+                        <span id="area_1" class="diqu"></span>
+                        <span id="area_2" class="diqu"></span>
+<script type="text/javascript" src="http://www.lvwen.com/static/js/leray_area.js"></script>
+<script type="text/javascript">
+    leray_load_area("<?php echo $this->iparea['s_areaid']; ?>",0,0,"provid,cityid,qxid",1);
+    leray_load_area("<?php echo $this->iparea['c_areaid']; ?>","<?php echo $this->iparea['s_areaid']; ?>",1,"provid,cityid,qxid",1);
+    leray_load_area("<?php echo $this->iparea['s_areaid']; ?>","<?php echo $this->iparea['c_areaid']; ?>",2,"provid,cityid,qxid",2)
+</script>
+								
 								<span class="ar-hold">请准确选择事件发生地，更有利于准确解答。</span>
                                 <!-- end 地区选择 -->
                                 <!-- 联系方式 -->

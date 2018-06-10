@@ -111,6 +111,8 @@ class main extends AWS_CONTROLLER
 		TPL::assign('question_info', $question_info);
 
 		TPL::assign('recent_topics', @unserialize($this->user_info['recent_topics']));
+		$iparea=get_real_city();
+		TPL::assign('iparea', $iparea);
 
 		TPL::output('publish/index');
 	}
@@ -306,7 +308,8 @@ class main extends AWS_CONTROLLER
 		$iparea=get_real_city();
 		TPL::assign('iparea', $iparea);
 		$username=strtolower(create_randomstr(4)).time();
-		exit(var_dump($username));
+		$abc=str_cut('发生发生发的发发发发',10);
+		exit(var_dump($abc));
 		TPL::output('publish/test');
 	}
 }

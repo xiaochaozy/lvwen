@@ -1,0 +1,94 @@
+<?php TPL::output('global/header.tpl.htm'); ?>
+
+<div class="aw-container-wrap">
+  <div class="container aw-publish">
+    <div class="row">
+      <div class="aw-content-wrap clearfix">
+        <div class="col-sm-12 col-md-9 aw-main-content"> 
+          <!-- tab 切换 -->
+          <ul class="nav nav-tabs aw-nav-tabs active">
+            <h2 class="hidden-xs"><i class="icon icon-ask"></i>
+              <?php _e('问题发布成功'); ?>
+            </h2>
+          </ul>
+          <!-- end tab 切换 -->
+          <div class="cg">
+            <h1><b>您的“VIP1”咨询服务支付成功。</b></h1>
+            <div class="cg_1">
+              <div class="cg_2">
+                <p><b>审核时间：</b>已审核通过。</p>
+                <p><b>解答时间：</b>150分钟以内，预计会在2018-02-28 19:23 之前给予解答。</p>
+                <p><b>短信通知：</b>1次（第1次解答短信提醒</p>
+              </div>
+              <div class="cg_3"></div>
+              <div class="cg_2">
+               <p><b>在线查看回复</b></p>
+                <p>1) 关注<a href="">个人动态</a>消息通知</p>
+                <p> 2) <a href="">点击查看</a> 该问题</p>
+                <p>3) 注意接收短信通知。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 侧边栏 -->
+        <div class="col-sm-12 col-md-3 aw-side-bar hidden-xs"> 
+          <!-- 问题发起指南 -->
+          <div class="aw-mod publish-help">
+            <div class="mod-head">
+              <h3>
+                <?php _e('服务说明指南'); ?>
+              </h3>
+            </div>
+            <div class="mod-body">
+              <p><b>•
+                <?php _e('服务内容'); ?>
+                :</b>
+                <?php _e('本服务只包含咨询内容解答服务，不包含合同审查、撰写等律师实务。'); ?>
+              </p>
+              <p><b>•
+                <?php _e('服务领域'); ?>
+                :</b>
+                <?php _e('计划生育/户口/中奖/加盟/退休/退伍等不属于法律问题，律师无法给予合理解答'); ?>
+              </p>
+              <p><b>•
+                <?php _e('服务时间'); ?>
+                </b>
+                <?php _e('支付成功后将在约定时间内在线解答（工作日9:00-18:00，周六周日以及法定节假日发布的问题，会顺延至工作日后的12小时内进行解答）'); ?>
+              </p>
+              <p><b>•
+                <?php _e('服务方式'); ?>
+                </b>
+                <?php _e('咨询发布口，将进入审核环节，随后进入解答环节，所有服务将在线完成，一经支付、 不予退款'); ?>
+              </p>
+              <p><b>•
+                <?php _e('律问网~'); ?>
+                </b><br/>
+                <b>•
+                <?php _e('专注于解决您的法律问题'); ?>
+                </b></p>
+              <?php if (get_setting('integral_system_enabled') == 'Y') { ?>
+              <p><b>•
+                <?php _e('关于积分'); ?>
+                ：</b>
+                <?php _e('发起一个问题会消耗您 %s 个积分', -get_setting('integral_system_config_new_question')); ?>
+                ,
+                <?php if (get_setting('integral_system_config_answer_change_source') == 'Y') { _e('每多一个回复你将获得 %s 个积分的奖励', -get_setting('integral_system_config_new_answer')); ?>
+                ,
+                <?php } _e('为了您的利益, 在发起问题的时候希望能够更好的描述您的问题以及多使用站内搜索功能'); ?>
+                .</p>
+              <?php } ?>
+            </div>
+          </div>
+          <!-- end 问题发起指南 --> 
+        </div>
+        <!-- end 侧边栏 --> 
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	var ATTACH_ACCESS_KEY = '<?php echo $this->attach_access_key; ?>';
+	var CATEGORY_ID = <?php echo $this->question_info['category_id']; ?>;
+	var PUBLISH_TYPE = 'question';
+</script>
+<?php TPL::output('global/footer.tpl.htm'); ?>
