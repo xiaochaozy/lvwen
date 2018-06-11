@@ -40,17 +40,25 @@ class main extends AWS_CONTROLLER
 			require_once 'config.php';
 //exit(var_dump(dirname(__FILE__)));
 require_once dirname(__FILE__).'/pagepay/service/AlipayTradeService.php';
-
 require_once dirname(__FILE__).'/pagepay/buildermodel/AlipayTradePagePayContentBuilder.php';
 
     //商户订单号，商户网站订单系统中唯一订单号，必填
-    $out_trade_no =$this->model('pay')->order($uid);
+	$marr=getcache('money');
+	$zfid=intval($_GET['zfid']);
+	$money=HTTP::get_cookie('test')?0.01:$marr[$zfid]['money'];
+	$orderinfo=array(
+		'userid'=>$uid,
+		'money'=>$money,
+		'contactname'=>$marr[$zfid]['title'].'咨询服务',
+		'zxid'=>intval($_GET['zxid'])
+	);
+    $out_trade_no =$this->model('pay')->order($orderinfo);
     //订单名称，必填
-    $subject = '测试测试';
+    $subject = $orderinfo['contactname'];
     //付款金额，必填
-    $total_amount = 0.01;
+    $total_amount = $money;
     //商品描述，可空
-    $body = trim($_POST['WIDbody']);
+    $body = $orderinfo['contactname'];
 	//构造参数
 	$payRequestBuilder = new AlipayTradePagePayContentBuilder();
 	$payRequestBuilder->setBody($body);

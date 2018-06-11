@@ -1,23 +1,19 @@
 <?php
-pc_base::load_app_class('WxPayApi');
-require_once PC_PATH.'modules'.DIRECTORY_SEPARATOR.'weixinpay'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR."WxPay.Notify.php";
-require_once PC_PATH.'modules'.DIRECTORY_SEPARATOR.'weixinpay'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR."log.php";
+ini_set('date.timezone','Asia/Shanghai');
+error_reporting(E_ERROR);
+require_once "classes/WxPayApi.class.php";
+require_once 'classes/WxPay.Notify.php';
+require_once 'classes/log.php';
+require_once '../../system/system.php';
 
 
 //初始化日志
-$logHandler= new CLogFileHandler(PC_PATH.'modules'.DIRECTORY_SEPARATOR.'weixinpay'.DIRECTORY_SEPARATOR."logs".DIRECTORY_SEPARATOR.date('Y-m-d').'.log');
+$logHandler= new CLogFileHandler("logs/".date('Y-m-d').'.log');
 $log = Log::Init($logHandler, 15);
 
-class notify extends WxPayNotify
+
+class PayNotifyCallBack extends WxPayNotify
 {
-	public function __construct() {
-		$this->db = pc_base::load_model('content_model');
-		$this->db->table_name='ask_pay_account';
-	}
-	public function init(){
-		Log::DEBUG("begin notify");
-		$this->Handle(false);
-	}
 	//查询订单
 	public function Queryorder($transaction_id)
 	{
@@ -31,39 +27,10 @@ class notify extends WxPayNotify
 			&& $result["return_code"] == "SUCCESS"
 			&& $result["result_code"] == "SUCCESS")
 		{
-			$orderinfo=$this->db->get_one(array('trade_sn'=>$result['out_trade_no']));
-			$this->db->update(array('status'=>'succ'),array('trade_sn'=>$result['out_trade_no']));
-            $monarr=array(24=>1,34=>1,44=>1,19=>1,29=>1,39=>1,49=>1,79=>2,89=>2,88=>2,99=>2,179=>3,199=>3,299=>3,0.01=>99);//小数最终也是被转化为整数执行，需要后台整理优化
-            $orderinfo['money']=floatval($orderinfo['money']);
-            $vip=$monarr[$orderinfo['money']]?$monarr[$orderinfo['money']]:0;//支付金额不在这三个之内则标记为0
-            if($vip && in_array($orderinfo['pay_type'],array('zixun','zixun_wap','czfwb_wap','sms_wap'))){
-                $this->db->table_name='ask_member';
-                $this->db->update(array('vip'=>$vip),array('userid'=>$orderinfo['userid']));
-            }
-            if($orderinfo['pay_type']=='zsfwb' && $orderinfo['money']>99){
-                $this->db->table_name = 'ask_member';
-                $this->db->update(array('vip' =>3), array('userid' => $orderinfo['userid']));
-                $this->db->table_name = 'ask_member_fwb';
-                $data=array(
-                    'userid'=>$orderinfo['userid'],
-                    'stime'=>time(),
-                    'svip'=>$orderinfo['zxid'],
-                    'lawyernum'=>10,
-                );
-                if($data['svip']==2){
-                    $data['etime']=strtotime(" +1 year +1 day");
-                    $data['fwnum']=6;
-                }else{
-                    $data['etime']=strtotime(" +180 day");
-                    $data['fwnum']=3;
-                }
-                $this->db->insert($data);
-            }
-            //付费之后的流程操作
-            $key = md5("FS".date("md"));
-            $url='http://www.sssss.com'.$key;
-            $res=curl_function($url,array('trade_sn'=>$result['out_trade_no']),'POST',5);
-
+			$mysql=new AWS_MODEL();
+			$orderinfo=$mysql->fetch_row('pay_account','trade_sn ="'.$result['out_trade_no'].'"');
+			$sql1="update ask_pay_account set `status`='succ' where trade_sn='".$result['out_trade_no']."'";
+			$mysql->query($sql1);
 			return true;
 		}
 		return false;
@@ -87,4 +54,41 @@ class notify extends WxPayNotify
 		return true;
 	}
 
+	function curl_function($url, $data=array(),$type="POST",$time=10){
+		if(trim($url) == ''){ return "";}
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $type);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_TIMEOUT,$time);
+
+		$tmpInfo = curl_exec($ch);
+
+		###$fp = fopen("ran.log", "a+");
+		###fwrite($fp, $tmpInfo."\n");
+		###fclose($fp);
+
+		if (curl_errno($ch)) {
+			//echo curl_errno($ch);
+			$tmpInfo = array(
+				"errcode"=>"999",
+				"errmsg"=>"not ok",
+				"msgid"=>"0",
+			);
+			$tmpInfo = json_encode($tmpInfo);
+		}
+		curl_close($ch);
+
+		return $tmpInfo;
+	}
 }
+
+Log::DEBUG("begin notify");
+$notify = new PayNotifyCallBack();
+$notify->Handle(false);

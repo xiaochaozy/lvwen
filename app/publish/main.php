@@ -305,11 +305,17 @@ class main extends AWS_CONTROLLER
 		TPL::output('publish/succ');
 	}
 	public function test_action(){
+		/*
 		$iparea=get_real_city();
 		TPL::assign('iparea', $iparea);
 		$username=strtolower(create_randomstr(4)).time();
 		$abc=str_cut('发生发生发的发发发发',10);
 		exit(var_dump($abc));
+		*/
+		$marr=getcache('money');
+		exit(var_dump($marr));
+		HTTP::set_cookie('test', 'zg369');
+		echo HTTP::get_cookie('test');exit;
 		TPL::output('publish/test');
 	}
 }

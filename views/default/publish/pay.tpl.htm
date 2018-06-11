@@ -110,41 +110,12 @@
             <form action="" method="post">
                 <div class="fl">
                     <div class="wx-tit"></div>
-                    <div class="wx-2vm" id="erweima">
+                    <div class="wx-2vm">
                         <img alt="扫码支付" src="/static/css/default/img/weixin.jpg">
-                        <script type="text/javascript">
-                            $(function () {
-                                var i = 1;
-                                function show() {
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "/index.php?m=content&c=member_pay&a=getstatus",
-                                        data: { orderid: "2018051418191362049" },
-                                        dataType: "json",
-                                        success: function (data) {
-                                            if (data.id > 0) {
-                                                console.log('成功');
-                                                if (typeof (posids) != "undefined" && posids == 32) {
-                                                    $('.da_wrap').hide();
-                                                    $('.rel2').show();
-                                                    setTimeout("window.location.reload()", 3000);
-                                                } else {
-                                                    window.location.href = '/index.php?m=content&c=member_pay&a=success&id=' + data.id + '&key=41e9be793e0d7e722d8d865f47dc1dc9';
-                                                }
-                                                clearInterval(iCount);
-                                            }
-                                            console.log(data);
-                                        }
-                                    });
-                                    i++;
-                                }
-                                var iCount = setInterval(show, 3000);
-                            });
-                        </script>
                     </div>
                     <dl>
                         <dt>
-                            <img src="/static/css/default/img/wxss.png">
+                            <img src="/static/css/default/img/wxss.png" id="erweima">
                         </dt>
                         <dd>
                             <p>打开微信扫描</p>
@@ -191,6 +162,7 @@
         $(".main-pay ul").removeClass("on borderLeft");
         $(".zxxuanze_ul4").addClass("on");
     });
+	var orderid;
     $('.sbtn').on("click", function () {
         var wh = $(this).attr('data-id');
         var url = '/index.php?m=pay&c=pay_ffzx&a=public_weixin_ffzx';
@@ -199,22 +171,36 @@
             $(".money").html("29.9");
             $(".mon2").html("29.9");
             $(".tt").html("VIP1");
-            var wxurl = '/?/pay/?topay=1&zfid=1';
+            var wxurl = '/?/weixinpay/?zfid=1';
         } else if (wh == '3') {
             $("#zfb").attr('href', '/?/pay/?topay=1&zfid=2');
             $(".money").html("99.90");
             $(".mon2").html("99.9");
             $(".tt").html("vip3");
-            var wxurl = '/?/pay/?topay=1&zfid=2';
+            var wxurl = '/?/weixinpay/?zfid=2';
         } else {
-            $("#zfb").attr('href', '/?/pay/?topay=1&zfid=3');
+            $("#zfb").attr('href', '/?/wxpay/?topay=1&zfid=3');
             $(".money").html("59.90");
             $(".mon2").html("59.9");
             $(".tt").html("VIP2");
-            var wxurl = '/?/pay/?topay=1&zfid=3';
+            var wxurl = '/?/weixinpay/?zfid=3';
         }
         //加载微信图片
-
+		$.ajax({
+            type: "POST",
+            url: wxurl,
+            async:false,
+            success: function(data){
+                if(data=='0'){
+                    return false;
+                }else{
+                    //$('#erweima').src("/wxapi/ceshi/example/native.php?posids=31&orderid="+data);
+					$('#erweima').attr('src',"/app/weixinpay/qrcode.php?data="+data.url);
+					orderid=data.orderid;
+					var iCount = setInterval(show, 3000);
+                }
+            }
+        });
         $('.pay-mask-1').show();
     })
     $('.icon-close').on("click", function () {
@@ -227,7 +213,28 @@
             $(".time").css("display", "none")
         });
     })
-
+	
+	//定时执行自动检测是否支付成功
+$(function () {
+  var i = 1;
+  function show() {
+    $.ajax({
+       type: "POST",
+       url: "/?/weixinpay/getstatus/",
+       data: { orderid:orderid},
+       dataType: "json",
+       success: function (data) {
+           if (data.id > 0) {
+                 console.log('成功');
+                 window.location.href = '/?/pay/succ/';
+               clearInterval(iCount);
+           }
+           console.log(data);
+          }
+     });
+     i++;
+  }
+});
 
 </script>
 <script type="text/javascript">

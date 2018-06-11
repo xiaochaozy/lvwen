@@ -34,23 +34,34 @@ class main extends AWS_CONTROLLER
 
     public function index_action()
     {
+		$uid=$this->user_id?$this->user_id:0;
+		$marr=getcache('money');
+		$zfid=intval($_GET['zfid']);
+		$money=HTTP::get_cookie('test')?0.01:$marr[$zfid]['money'];
+		$orderinfo=array(
+			'userid'=>$uid,
+			'money'=>$money,
+			'contactname'=>$marr[$zfid]['title'].'咨询服务',
+			'zxid'=>intval($_GET['zxid'])
+		);
+    	$out_trade_no =$this->model('pay')->order($orderinfo);
+	
 		$notify = new NativePay();
 		$input = new WxPayUnifiedOrder();
         
-		$orderinfo=$this->model('pay')->getorder(3);
-		$orderid=$orderinfo['trade_sn'];
-		$orderinfo['contactname']='测试';
+		$orderid=$out_trade_no;
+		$orderinfo['contactname']=$marr[$zfid]['title'].'咨询服务';
 		$input->SetBody($orderinfo['contactname']);
 		$input->SetAttach($orderinfo['contactname']);
 		$input->SetGoods_tag($orderinfo['contactname']);
-		$money=0.01*100;
+		
 		$time=time();
 		$ip=ip();
 		$input->SetOut_trade_no($orderid);
 		$input->SetTotal_fee($money);
 		$input->SetTime_start(date("YmdHis"));
 		$input->SetTime_expire(date("YmdHis", time() + 600));
-		$input->SetNotify_url("http://www.lvwen360.com/?/weixinpay/notify/");
+		$input->SetNotify_url("http://www.lvwen360.com/app/weixinpay/notify.php");
 		//$input->SetTrade_type("MWEB");
 		$input->SetTrade_type("NATIVE");
 		$input->SetProduct_id("123456789");
@@ -66,17 +77,19 @@ class main extends AWS_CONTROLLER
  		{
  			echo 'Message: ' .$e->getMessage();
  		}
-		echo "<img src=".$result["code_url"]." width='200' height='200'>";
-		exit(var_dump($result));
+		echo $result["code_url"];
+		exit;
+		/*
         $key=md5('XXXXXpay'.date("md"));
 
         $redirect='http://www.lvwen360.com/?/weixinpay/succ/';
         $result['mweb_url'].='&redirect_url='.urlencode($redirect);
 
         $tmpInfo = json_encode($result);
+		*/
         //echo $input->GetSpbill_create_ip();
         //echo '<br/>';
-        echo $tmpInfo;
+        //echo $tmpInfo;
 		 /*
 		$url2 = $result["code_url"];
 
@@ -85,4 +98,8 @@ class main extends AWS_CONTROLLER
         */
         //include template('weixinpay','weixinpay');
     }
+	public function getstatus_action()
+    {
+		exit(var_dump(8989));
+	}
 }

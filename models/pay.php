@@ -20,12 +20,14 @@ if (!defined('IN_ANWSION'))
 
 class pay_class extends AWS_MODEL
 {
-	public function order($uid)
+	public function order($data)
 	{
 		$trade_sn=create_sn();
 		$this->insert('pay_account', array(
 			'trade_sn' =>$trade_sn,
-			'userid' => $uid,
+			'userid' =>$data['userid'],
+			'contactname'=>$data['contactname'],
+			'money'=>$data['money'],
 			'ip'=>ip(),
 			'addtime' => time()
 		));
