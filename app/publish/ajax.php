@@ -24,7 +24,7 @@ class ajax extends AWS_CONTROLLER
     public function get_access_rule()
     {
         $rule_action['rule_type'] = 'white'; //黑名单,黑名单中的检查  'white'白名单,白名单以外的检查
-        $rule_action['actions'] = array();
+        $rule_action['actions'] = array('publish_question');
 
         return $rule_action;
     }
@@ -376,7 +376,8 @@ class ajax extends AWS_CONTROLLER
 
         if (cjk_strlen($_POST['question_content']) < 5) {
             //H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('问题标题字数不得少于 5 个字')));
-			$_POST['question_content']=str_cut($_POST['question_detail'],30);
+			$_POST['question_content']=cjk_substr($_POST['question_detail'],0,10,'UTF-8','...');
+			//exit(var_dump($_POST['question_content']));
 			
 			//H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('1111')));
         }
@@ -499,7 +500,7 @@ class ajax extends AWS_CONTROLLER
             $_POST['question_detail']
         ))) {
             $this->model('publish')->publish_approval('question', array(
-                'question_content' => str_cut($_POST['question_detail'],30),
+                'question_content' => $_POST['question_content'],
                 'question_detail' => $_POST['question_detail'],
                 'category_id' => $_POST['category_id'],
                 'topics' => $_POST['topics'],
@@ -515,6 +516,7 @@ class ajax extends AWS_CONTROLLER
         } else {
 			
             $question_id = $this->model('publish')->publish_question($_POST['question_content'], $_POST['question_detail'], $_POST['category_id'], $this->user_id, $_POST['topics'], $_POST['anonymous'], $_POST['attach_access_key'], $_POST['ask_user_id'], $this->user_info['permission']['create_topic']);
+			$this->model('publish')->publish_diqu($question_id,array('provid'=>$_POST['provid'],'cityid'=>$_POST['cityid'],'qxid'=>$_POST['qxid']));
 
             if ($_POST['_is_mobile']) {
                 if ($weixin_user = $this->model('openid_weixin_weixin')->get_user_info_by_uid($this->user_id)) {

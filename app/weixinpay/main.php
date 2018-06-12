@@ -36,7 +36,7 @@ class main extends AWS_CONTROLLER
     {
 		$uid=$this->user_id?$this->user_id:0;
 		$marr=getcache('money');
-		$zfid=intval($_GET['zfid']);
+		$zfid=1;  //intval($_GET['zfid']);
 		$money=HTTP::get_cookie('test')?0.01:$marr[$zfid]['money'];
 		$orderinfo=array(
 			'userid'=>$uid,
@@ -58,7 +58,7 @@ class main extends AWS_CONTROLLER
 		$time=time();
 		$ip=ip();
 		$input->SetOut_trade_no($orderid);
-		$input->SetTotal_fee($money);
+		$input->SetTotal_fee($money*100);
 		$input->SetTime_start(date("YmdHis"));
 		$input->SetTime_expire(date("YmdHis", time() + 600));
 		$input->SetNotify_url("http://www.lvwen360.com/app/weixinpay/notify.php");
@@ -72,12 +72,24 @@ class main extends AWS_CONTROLLER
 		try
  		{
 			$result = $notify->GetPayUrl($input);
+			//exit(var_dump($result));
+			$tmpInfo = array(
+            "url"=>$result["code_url"],
+            "orderid"=>$out_trade_no,
+        );
  		}
 		catch(Exception $e)
  		{
  			echo 'Message: ' .$e->getMessage();
+			$tmpInfo = array(
+            "url"=>'Message: ' .$e->getMessage(),
+            "orderid"=>$out_trade_no,
+        );
  		}
-		echo $result["code_url"];
+		
+		
+        $tmpInfo = json_encode($tmpInfo);
+        echo $tmpInfo;
 		exit;
 		/*
         $key=md5('XXXXXpay'.date("md"));

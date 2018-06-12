@@ -319,6 +319,13 @@ class publish_class extends AWS_MODEL
 
 		return $question_id;
 	}
+	public function publish_diqu($question_id,$diquarr){
+		return $this->update('question', array(
+				'provid' =>$diquarr['provid'],
+				'cityid' =>$diquarr['cityid'],
+				'qxid' =>$diquarr['qxid'],
+			), 'question_id = '.$question_id);
+	}
 
 	public function publish_article($title,$logo_img, $message, $uid, $topics = null, $category_id = null,$column_id=null, $attach_access_key = null, $create_topic = true)
 	{

@@ -111,11 +111,11 @@
                 <div class="fl">
                     <div class="wx-tit"></div>
                     <div class="wx-2vm">
-                        <img alt="扫码支付" src="/static/css/default/img/weixin.jpg">
+                        <img alt="扫码支付" src="/static/css/default/img/weixin.jpg" id="erweima" width="188" height="188">
                     </div>
                     <dl>
                         <dt>
-                            <img src="/static/css/default/img/wxss.png" id="erweima">
+                            <img src="/static/css/default/img/wxss.png" >
                         </dt>
                         <dd>
                             <p>打开微信扫描</p>
@@ -179,7 +179,7 @@
             $(".tt").html("vip3");
             var wxurl = '/?/weixinpay/?zfid=2';
         } else {
-            $("#zfb").attr('href', '/?/wxpay/?topay=1&zfid=3');
+            $("#zfb").attr('href', '/?/pay/?topay=1&zfid=3');
             $(".money").html("59.90");
             $(".mon2").html("59.9");
             $(".tt").html("VIP2");
@@ -190,6 +190,7 @@
             type: "POST",
             url: wxurl,
             async:false,
+			dataType :'json',
             success: function(data){
                 if(data=='0'){
                     return false;
@@ -197,6 +198,7 @@
                     //$('#erweima').src("/wxapi/ceshi/example/native.php?posids=31&orderid="+data);
 					$('#erweima').attr('src',"/app/weixinpay/qrcode.php?data="+data.url);
 					orderid=data.orderid;
+					console.log(data);
 					var iCount = setInterval(show, 3000);
                 }
             }
@@ -215,8 +217,7 @@
     })
 	
 	//定时执行自动检测是否支付成功
-$(function () {
-  var i = 1;
+var i = 1;
   function show() {
     $.ajax({
        type: "POST",
@@ -234,7 +235,6 @@ $(function () {
      });
      i++;
   }
-});
 
 </script>
 <script type="text/javascript">

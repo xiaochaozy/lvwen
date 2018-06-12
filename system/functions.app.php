@@ -594,3 +594,8 @@ function random($length, $chars = '0123456789') {
 	}
 	return $hash;
 }
+function sendmsglog($content,$filename=''){
+    if(!$filename) $filename='msg_'.date("Ym",time());
+    $filename=ROOT_PATH.'asklog'.DIRECTORY_SEPARATOR.$filename.".log";
+    file_put_contents($filename,PHP_EOL.$content,FILE_APPEND);
+}

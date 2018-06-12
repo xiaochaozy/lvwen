@@ -23,7 +23,7 @@ class main extends AWS_CONTROLLER
 	public function get_access_rule()
 	{
 		$rule_action['rule_type'] = 'white'; //黑名单,黑名单中的检查  'white'白名单,白名单以外的检查
-		$rule_action['actions'] = array('test');
+		$rule_action['actions'] = array('test','index');
 		return $rule_action;
 	}
 
@@ -48,7 +48,7 @@ class main extends AWS_CONTROLLER
 		}
 		else if (!$this->user_info['permission']['publish_question'])
 		{
-			H::redirect_msg(AWS_APP::lang()->_t('你所在用户组没有权限发布问题'));
+			//H::redirect_msg(AWS_APP::lang()->_t('你所在用户组没有权限发布问题'));
 		}
 		else if ($this->is_post() AND $_POST['question_detail'])
 		{
@@ -312,10 +312,13 @@ class main extends AWS_CONTROLLER
 		$abc=str_cut('发生发生发的发发发发',10);
 		exit(var_dump($abc));
 		*/
+		/*
 		$marr=getcache('money');
 		exit(var_dump($marr));
 		HTTP::set_cookie('test', 'zg369');
 		echo HTTP::get_cookie('test');exit;
+		*/
+		//sendmsglog(json_encode($_POST),'zfbpay');
 		TPL::output('publish/test');
 	}
 }

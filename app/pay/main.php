@@ -38,6 +38,7 @@ class main extends AWS_CONTROLLER
 			$uid=$this->user_id?$this->user_id:0;
 			if(isset($_GET['topay'])){
 			require_once 'config.php';
+			
 //exit(var_dump(dirname(__FILE__)));
 require_once dirname(__FILE__).'/pagepay/service/AlipayTradeService.php';
 require_once dirname(__FILE__).'/pagepay/buildermodel/AlipayTradePagePayContentBuilder.php';
@@ -86,6 +87,7 @@ require_once dirname(__FILE__).'/pagepay/buildermodel/AlipayTradePagePayContentB
 			
 	}
 	
+	//同步通知
 	public function success_action(){
 		require_once("config.php");
 		require_once 'pagepay/service/AlipayTradeService.php';
@@ -105,7 +107,7 @@ if($result) {//验证成功
 
 	//支付宝交易号
 	$trade_no = htmlspecialchars($_GET['trade_no']);
-	$res=$this->model('pay')->success($out_trade_no);	
+	//$res=$this->model('pay')->success($out_trade_no);	
 	//echo "验证成功<br />支付宝交易号：".$trade_no;
 	TPL::output('pay/succ');
 }
@@ -115,6 +117,35 @@ else {
 }
 		
 	}
+	
+ //异步通知
+  public function zfbnotify_action(){
+  	require_once 'config.php';
+	require_once 'pagepay/service/AlipayTradeService.php';
+	$arr=$_POST;
+	$alipaySevice = new AlipayTradeService($config); 
+	$alipaySevice->writeLog(var_export($_POST,true));
+	$result = $alipaySevice->check($arr);
+	if($result) {
+		$out_trade_no = $_POST['out_trade_no'];
+	//支付宝交易号
+	$trade_no = $_POST['trade_no'];
+	//交易状态
+	$trade_status = $_POST['trade_status'];
+    if($_POST['trade_status'] == 'TRADE_FINISHED') {
+
+    }
+    else if ($_POST['trade_status'] == 'TRADE_SUCCESS') {	
+		//注意：
+		//付款完成后，支付宝系统发送该交易状态通知
+    }
+	$res=$this->model('pay')->success($out_trade_no);
+	sendmsglog(json_encode($_POST),'zfbpay');
+		echo "支付成功！";	
+	}else{
+		 echo "fail";
+	}
+  }
 
 	
 }
