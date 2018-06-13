@@ -41,7 +41,11 @@ class main extends AWS_CONTROLLER
 			
 //exit(var_dump(dirname(__FILE__)));
 require_once dirname(__FILE__).'/pagepay/service/AlipayTradeService.php';
-require_once dirname(__FILE__).'/pagepay/buildermodel/AlipayTradePagePayContentBuilder.php';
+if(isset($_GET['from']) && $_GET['from']==1){
+	require_once dirname(__FILE__).'/pagepay/buildermodel/AlipayTradeWapPayContentBuilder.php';
+}else{
+	require_once dirname(__FILE__).'/pagepay/buildermodel/AlipayTradePagePayContentBuilder.php';
+}
 
     //商户订单号，商户网站订单系统中唯一订单号，必填
 	$marr=getcache('money');
@@ -61,7 +65,14 @@ require_once dirname(__FILE__).'/pagepay/buildermodel/AlipayTradePagePayContentB
     //商品描述，可空
     $body = $orderinfo['contactname'];
 	//构造参数
-	$payRequestBuilder = new AlipayTradePagePayContentBuilder();
+	if(isset($_GET['from']) && $_GET['from']==1){//手机支付
+		$payRequestBuilder = new AlipayTradeWapPayContentBuilder();
+		$timeout_express="1m";
+		$payRequestBuilder->setTimeExpress($timeout_express);
+		
+	}else{
+		$payRequestBuilder = new AlipayTradePagePayContentBuilder();
+	}
 	$payRequestBuilder->setBody($body);
 	$payRequestBuilder->setSubject($subject);
 	$payRequestBuilder->setTotalAmount($total_amount);
@@ -76,7 +87,13 @@ require_once dirname(__FILE__).'/pagepay/buildermodel/AlipayTradePagePayContentB
 	 * @param $notify_url 异步通知地址，公网可以访问
 	 * @return $response 支付宝返回的信息
  	*/
-	$response = $aop->pagePay($payRequestBuilder,$config['return_url'],$config['notify_url']);
+	if(isset($_GET['from']) && $_GET['from']==1){//手机支付
+		$response = $aop->wapPay($payRequestBuilder,$config['return_url'],$config['notify_url']);
+		
+	}else{
+		$response = $aop->pagePay($payRequestBuilder,$config['return_url'],$config['notify_url']);
+	}
+	 
 
 	//输出表单
 	var_dump($response);

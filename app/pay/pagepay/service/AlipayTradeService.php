@@ -84,6 +84,35 @@ class AlipayTradeService {
 		// $response = $response->alipay_trade_wap_pay_response;
 		return $response;
 	}
+	
+	function AlipayWapPayService($alipay_config) {
+		$this->__construct($alipay_config);
+	}
+
+	/**
+	 * alipay.trade.wap.pay
+	 * @param $builder 业务参数，使用buildmodel中的对象生成。
+	 * @param $return_url 同步跳转地址，公网可访问
+	 * @param $notify_url 异步通知地址，公网可以访问
+	 * @return $response 支付宝返回的信息
+ 	*/
+	function wapPay($builder,$return_url,$notify_url) {
+	
+		$biz_content=$builder->getBizContent();
+		//打印业务参数
+		$this->writeLog($biz_content);
+	
+		$request = new AlipayTradeWapPayRequest();
+	
+		$request->setNotifyUrl($notify_url);
+		$request->setReturnUrl($return_url);
+		$request->setBizContent ( $biz_content );
+	
+		// 首先调用支付api
+		$response = $this->aopclientRequestExecute ($request,true);
+		// $response = $response->alipay_trade_wap_pay_response;
+		return $response;
+	}
 
 	/**
 	 * sdkClient

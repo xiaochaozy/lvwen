@@ -62,8 +62,13 @@ class main extends AWS_CONTROLLER
 		$input->SetTime_start(date("YmdHis"));
 		$input->SetTime_expire(date("YmdHis", time() + 600));
 		$input->SetNotify_url("http://www.lvwen360.com/app/weixinpay/notify.php");
-		//$input->SetTrade_type("MWEB");
+		if(isset($_GET['from']) && $_GET['from']==1){
+			$input->SetTrade_type("MWEB");
+		}else{
 		$input->SetTrade_type("NATIVE");
+		}
+		//$input->SetTrade_type("MWEB");
+		
 		$input->SetProduct_id("123456789");
         $input->SetSpbill_create_ip($ip);
         //echo $input->GetSpbill_create_ip();
@@ -73,10 +78,20 @@ class main extends AWS_CONTROLLER
  		{
 			$result = $notify->GetPayUrl($input);
 			//exit(var_dump($result));
-			$tmpInfo = array(
-            "url"=>$result["code_url"],
-            "orderid"=>$out_trade_no,
-        );
+			if(isset($_GET['from']) && $_GET['from']==1){
+				$redirect='https://www.lvwen360.com/?/m/succeed/';
+				$result['mweb_url'].='&redirect_url='.urlencode($redirect);
+				//echo $result['mweb_url'].'<br/>';
+				$tmpInfo = array(
+            		"mweb_url"=>$result['mweb_url'],
+            		"orderid"=>$out_trade_no,
+				);
+			}else{
+				$tmpInfo = array(
+            		"url"=>$result["code_url"],
+            		"orderid"=>$out_trade_no,
+				);
+			}
  		}
 		catch(Exception $e)
  		{

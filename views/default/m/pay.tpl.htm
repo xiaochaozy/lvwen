@@ -22,7 +22,7 @@
             </div>
             <div class="zhifu_way">
                 <p class="chose">选择支付方式</p>
-                <a href="javascript:gotoh5pay('192266');">
+                <a href="javascript:void(0);" id="wxzf">
                     <div class="zf-wx">
                         <img src="static/mobile/img/wxzf.png" class="pic">
                         <div class="pg">
@@ -32,7 +32,7 @@
                         <img src="static/mobile/img/right.png" class="pic-r">
                     </div>
                 </a>
-                <a href="javascript:gotopay('192266');">
+                <a href="/?/pay/?topay=1&zfid=1&from=1">
                     <div class="zf-zfb">
                         <img src="static/mobile/img/zfb.png" class="pic">
                         <div class="pg">
@@ -42,21 +42,30 @@
                     <img src="static/mobile/img/right.png" class="pic-r">
                     </div>
                 </a>
-                <script>
-                    function gotopay(sid) {
-                        window.location.href = "/index.php/Home/Wine/alipay/type/helpadd/id/" + sid + ".html";
-                    }
-
-                    function gotoh5pay(sid) {
-                        window.location.href = "/index.php/Home/Hfivepay/hwxpay/type/helpadd/id/" + sid + ".html";
-                    }
-                </script>
+                
             </div>
         </div>
     </div>
 <!-- end 内容 -->
-
+<script>
+       $("#wxzf").click(function(){
+			$.ajax({
+                type: "GET",
+                url: "/?/weixinpay/?zfid=1&from=1",
+                dataType: "json",
+                success:function(data){
+                    alert(data.mweb_url);
+                    console.log(data.mweb_url);
+                    window.location.href =data.mweb_url;
+                    //console.log(data);
+                }
+            });
+		})
+        
+    </script>
 <script type="text/javascript">
+//
+
 	var CATEGORY_ID = <?php echo $this->question_info['category_id']; ?>;
 	var ATTACH_ACCESS_KEY = '<?php echo $this->attach_access_key; ?>';
 	var PUBLISH_TYPE = 'question';
