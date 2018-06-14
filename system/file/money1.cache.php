@@ -1,0 +1,20 @@
+<?php
+return array(
+    '0.01'=>array(
+		'title'=>'VIP0',
+		'money'=>0.01
+	),
+	'29.9'=>array(
+		'title'=>'VIP1',
+		'money'=>29.9
+	),
+    '59.9'=>array(
+		'title'=>'VIP2',
+		'money'=>59.9
+	),
+    '99.9'=>array(
+		'title'=>'VIP3',
+		'money'=>99.9
+	)
+);
+?>

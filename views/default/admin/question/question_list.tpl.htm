@@ -8,6 +8,7 @@
 				<ul class="nav nav-tabs">
 					<li class="active"><a href="#list" data-toggle="tab"><?php _e('问题列表'); ?></a></li>
 					<li><a href="#search" data-toggle="tab"><?php _e('搜索'); ?></a></li>
+                    <li><a href="admin/order_list/" data-toggle="tab"><?php _e('订单列表'); ?></a></li>
 				</ul>
 			</h3>
 		</div>
@@ -42,14 +43,16 @@
 							<?php foreach ($this->list AS $key => $val) { ?>
 							<tr>
 								<td><input type="checkbox" name="question_ids[]" value="<?php echo $val['question_id']; ?>"></td>
-								<td><p>级别</p></td>
+								<td><p><?php echo $val['level']; ?></p></td>
 								<td><a href="question/<?php echo $val['question_id']; ?>" target="_blank"><?php echo $val['question_content']; ?></a></td>
 								<td><?php if ($val['answer_count']) { ?><?php echo $val['answer_count']; ?><?php } else { ?>0<?php } ?></td>
 								<td><?php echo $val['focus_count']; ?></td>
 								<td><?php echo $val['view_count']; ?></td>
 								<td><a href="people/<?php echo $val['user_info']['url_token']; ?>" target="_blank"><?php echo $val['user_info']['user_name']; ?></a></td>
-								<td><p>电话</p></td>
-								<td><p>地区</p></td>
+								<td><p><?php echo $val['question_mobile']; ?></p></td>
+								<td><p><?php 
+                                $areas=getcache(1);$areas=$areas['data'];
+                                echo $areas[$val['provid']]['name'].$areas[$val['cityid']]['name']; ?></p></td>
 								<td><?php echo date_friendly($val['add_time']); ?></td>
 								<td><?php echo date_friendly($val['update_time']); ?></td>
 								<td><a href="publish/<?php echo $val['question_id']; ?>" target="_blank" class="icon icon-edit md-tip" title="<?php _e('编辑'); ?>"></a></td>

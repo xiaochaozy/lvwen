@@ -518,7 +518,7 @@ class ajax extends AWS_CONTROLLER
         } else {
 			
             $question_id = $this->model('publish')->publish_question($_POST['question_content'], $_POST['question_detail'], $_POST['category_id'], $this->user_id, $_POST['topics'], $_POST['anonymous'], $_POST['attach_access_key'], $_POST['ask_user_id'], $this->user_info['permission']['create_topic']);
-			$this->model('publish')->publish_diqu($question_id,array('provid'=>$_POST['provid'],'cityid'=>$_POST['cityid'],'qxid'=>$_POST['qxid']));
+			$this->model('publish')->publish_diqu($question_id,array('provid'=>$_POST['provid'],'cityid'=>$_POST['cityid'],'qxid'=>$_POST['qxid'],'question_mobile'=>$_POST['question_mobile']));
 
 			HTTP::set_cookie('askid',$question_id);
             if ($_POST['_is_mobile']) {

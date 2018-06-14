@@ -116,6 +116,10 @@ class question extends AWS_ADMIN_CONTROLLER
 			foreach ($question_list AS $key => $val)
 			{
 				$question_list[$key]['user_info'] = $question_list_user_infos[$val['published_uid']];
+				//获取付费级别bychao
+				$level=$this->model('question')->getlevel($val['question_id']);
+				$arr1=getcache('money1');
+				$question_list[$key]['level'] = isset($arr1[$level['money']]['title'])?$arr1[$level['money']]['title']:'Free';
 			}
 		}
 
@@ -171,5 +175,35 @@ class question extends AWS_ADMIN_CONTROLLER
 		))->create_links());
 
 		TPL::output('admin/question/report_list');
+	}
+	/*
+	*订单列表bychao
+	*/
+	public function order_list_action()
+	{
+		if ($order_list = $this->model('question')->get_report_list('status = ' . intval($_GET['status']), $_GET['page'], $this->per_page))
+		{
+			$order_total = $this->model('question')->paynums();
+
+			//$userinfos = $this->model('account')->get_user_info_by_uids(fetch_array_value($report_list, 'uid'));
+
+			foreach ($order_list as $key => $val)
+			{
+				//$report_list[$key]['user'] = $userinfos[$val['uid']];
+			}
+		}
+
+		$this->crumb(AWS_APP::lang()->_t('用户举报'), 'admin/question/report_list/');
+
+		TPL::assign('list', $order_total);
+		TPL::assign('menu_list', $this->model('admin')->fetch_menu_list(306));
+
+		TPL::assign('pagination', AWS_APP::pagination()->initialize(array(
+			'base_url' => get_js_url('/admin/question/order_list/') . implode('__', $url_param),
+			'total_rows' => $order_total,
+			'per_page' => $this->per_page
+		))->create_links());
+
+		TPL::output('admin/question/order_list');
 	}
 }

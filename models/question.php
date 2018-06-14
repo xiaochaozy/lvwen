@@ -1560,4 +1560,15 @@ class question_class extends AWS_MODEL
 
 		return $near_by_questions;
 	}
+	/**
+	*addbychao
+	*/
+	public function getlevel($qid)
+	{
+		$data=$this->fetch_row('pay_account','status="succ" and zxid =' .$zxid);
+		return $data;
+	}
+	public function paynums(){
+		return $this->count('pay_account');
+	}
 }
