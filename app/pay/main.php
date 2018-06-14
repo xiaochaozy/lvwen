@@ -55,7 +55,7 @@ if(isset($_GET['from']) && $_GET['from']==1){
 		'userid'=>$uid,
 		'money'=>$money,
 		'contactname'=>$marr[$zfid]['title'].'咨询服务',
-		'zxid'=>intval($_GET['zxid'])
+		'zxid'=>HTTP::get_cookie('askid'),
 	);
     $out_trade_no =$this->model('pay')->order($orderinfo);
     //订单名称，必填

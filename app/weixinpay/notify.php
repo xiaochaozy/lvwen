@@ -29,7 +29,7 @@ class PayNotifyCallBack extends WxPayNotify
 		{
 			$mysql=new AWS_MODEL();
 			$orderinfo=$mysql->fetch_row('pay_account','trade_sn ="'.$result['out_trade_no'].'"');
-			$sql1="update ask_pay_account set `status`='succ' where trade_sn='".$result['out_trade_no']."'";
+			$sql1="update aws_pay_account set `status`='succ' where trade_sn='".$result['out_trade_no']."'";
 			$mysql->query($sql1);
 			return true;
 		}

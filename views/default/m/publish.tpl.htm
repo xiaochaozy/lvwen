@@ -52,7 +52,7 @@
 			<!-- 手机 -->
 			<p class="are-tilel">手机：</p>
                  <span>
-			     <input type="text" name="" class=" selectpicker2 form-control" value="" placeholder="请输入您的常用手机号" required="required" pattern="" title="">
+			     <input type="text" name="question_mobile" class=" selectpicker2 form-control" value="" placeholder="请输入您的常用手机号" required="required" pattern="" title="">
 			    </span>
                 <span class="numb-err text-waring">✔输入正确</span>
                 <br>
@@ -85,7 +85,8 @@
 				<?php if ($this->question_info['question_id'] AND ($this->user_info['permission']['is_administortar'] OR $this->user_info['permission']['is_moderator'])) { ?>
 				<!-- <label class="pull-left"><input type="checkbox"  value="1" name="do_delete" /> <?php _e('删除问题'); ?></label> -->
 				<?php } ?>
-
+                <a class="btn btn-success btn-slarge" onclick="AWS.ajax_post($('#question_form')); return false;"><?php _e('测试发布'); ?></a>
+                <br/><br/><br/><br/>
 				<a class="btn btn-success btn-slarge" data-toggle="modal" data-target="#myModal"><?php _e('提交问题'); ?></a>
 			</div>
 
@@ -225,7 +226,6 @@
 	  </div>
 	</div>
   </div>
-  <script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
   <script src="<?php echo G_STATIC_URL; ?>/mobile/js/toast.js"></script>
   <script type="text/javascript"> 
   var countdown=60; 
@@ -254,10 +254,8 @@
 </body>
 <script>
     $(document).ready(function(){
-
-        var lenInput = $('.textarea-item').val().length;
-
-        $(".textarea-item").keyup(function(){
+        var lenInput = $('.form-control').val().length;
+        $(".form-control").keyup(function(){
             lenInput = $(this).val().length;
             if(lenInput>20){
                 $('.world-length').hide();
@@ -273,6 +271,7 @@
 			duration:2000,
 	
 		});
+		
 	}
 </script>
 <?php TPL::output('m/footer1.tpl.htm'); ?>

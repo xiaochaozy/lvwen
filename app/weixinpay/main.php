@@ -36,13 +36,13 @@ class main extends AWS_CONTROLLER
     {
 		$uid=$this->user_id?$this->user_id:0;
 		$marr=getcache('money');
-		$zfid=1;  //intval($_GET['zfid']);
+		$zfid=intval($_GET['zfid']);
 		$money=HTTP::get_cookie('test')?0.01:$marr[$zfid]['money'];
 		$orderinfo=array(
 			'userid'=>$uid,
 			'money'=>$money,
 			'contactname'=>$marr[$zfid]['title'].'咨询服务',
-			'zxid'=>intval($_GET['zxid'])
+			'zxid'=>HTTP::get_cookie('askid'),
 		);
     	$out_trade_no =$this->model('pay')->order($orderinfo);
 	
@@ -61,7 +61,7 @@ class main extends AWS_CONTROLLER
 		$input->SetTotal_fee($money*100);
 		$input->SetTime_start(date("YmdHis"));
 		$input->SetTime_expire(date("YmdHis", time() + 600));
-		$input->SetNotify_url("http://www.lvwen360.com/app/weixinpay/notify.php");
+		$input->SetNotify_url("https://www.lvwen360.com/app/weixinpay/notify.php");
 		if(isset($_GET['from']) && $_GET['from']==1){
 			$input->SetTrade_type("MWEB");
 		}else{

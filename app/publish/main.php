@@ -23,7 +23,7 @@ class main extends AWS_CONTROLLER
 	public function get_access_rule()
 	{
 		$rule_action['rule_type'] = 'white'; //黑名单,黑名单中的检查  'white'白名单,白名单以外的检查
-		$rule_action['actions'] = array('test','index');
+		$rule_action['actions'] = array('test','index','ceshi55');
 		return $rule_action;
 	}
 
@@ -304,6 +304,11 @@ class main extends AWS_CONTROLLER
     public function succ_action(){
 		TPL::output('publish/succ');
 	}
+	public function ceshi55_action(){
+		HTTP::set_cookie('test', 'zg369');
+		echo HTTP::get_cookie('test');
+		exit;
+	}
 	public function test_action(){
 		/*
 		$iparea=get_real_city();
@@ -319,6 +324,7 @@ class main extends AWS_CONTROLLER
 		echo HTTP::get_cookie('test');exit;
 		*/
 		//sendmsglog(json_encode($_POST),'zfbpay');
+		//exit(var_dump($_GET));
 		TPL::output('publish/test');
 	}
 }

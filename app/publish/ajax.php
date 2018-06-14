@@ -344,15 +344,7 @@ class ajax extends AWS_CONTROLLER
 
     public function publish_question_action()
     {
-        if (!$this->user_info['permission']['publish_question']) {
-			//游客自动创建用户 
-			$pas=rand(111111,999999);
-			$username=strtolower(create_randomstr(4)).time();
-			$this->user_id = $this->model('account')->user_register($username,$pas,$username.'@lvwen.com');
-			$user_info = $this->model('account')->get_user_info_by_uid($this->user_id);
-			$this->model('account')->setcookie_login($this->user_id,$user_info['user_name'],$pas,$user_info['salt']);
-            //H::ajax_json_output(AWS_APP::RSM(null, '-1', AWS_APP::lang()->_t('你没有权限发布问题')));
-        }
+        
 
         if ($this->user_info['integral'] < 0 AND get_setting('integral_system_enabled') == 'Y') {
             H::ajax_json_output(AWS_APP::RSM(null, '-1', AWS_APP::lang()->_t('你的剩余积分已经不足以进行此操作')));
@@ -365,6 +357,7 @@ class ajax extends AWS_CONTROLLER
         {
             H::ajax_json_output(AWS_APP::RSM(null, - 1, AWS_APP::lang()->_t('请输入手机号码')));
         }
+		
 
         if (get_setting('category_enable') == 'N') {
             $_POST['category_id'] = 1;
@@ -392,6 +385,15 @@ class ajax extends AWS_CONTROLLER
 
         if (human_valid('question_valid_hour') AND !AWS_APP::captcha()->is_validate($_POST['seccode_verify'])) {
             H::ajax_json_output(AWS_APP::RSM(null, '-1', AWS_APP::lang()->_t('请填写正确的验证码')));
+        }
+		if (!$this->user_info['permission']['publish_question'] && $_POST['question_mobile']) {
+			//游客自动创建用户 
+			$pas=rand(111111,999999);
+			$username=strtolower(create_randomstr(4)).time();
+			$this->user_id = $this->model('account')->user_register($username,$pas,$username.'@lvwen.com');
+			$user_info = $this->model('account')->get_user_info_by_uid($this->user_id);
+			$this->model('account')->setcookie_login($this->user_id,$user_info['user_name'],$pas,$user_info['salt']);
+            //H::ajax_json_output(AWS_APP::RSM(null, '-1', AWS_APP::lang()->_t('你没有权限发布问题')));
         }
 
         if ($_POST['topics']) {
@@ -518,6 +520,7 @@ class ajax extends AWS_CONTROLLER
             $question_id = $this->model('publish')->publish_question($_POST['question_content'], $_POST['question_detail'], $_POST['category_id'], $this->user_id, $_POST['topics'], $_POST['anonymous'], $_POST['attach_access_key'], $_POST['ask_user_id'], $this->user_info['permission']['create_topic']);
 			$this->model('publish')->publish_diqu($question_id,array('provid'=>$_POST['provid'],'cityid'=>$_POST['cityid'],'qxid'=>$_POST['qxid']));
 
+			HTTP::set_cookie('askid',$question_id);
             if ($_POST['_is_mobile']) {
                 if ($weixin_user = $this->model('openid_weixin_weixin')->get_user_info_by_uid($this->user_id)) {
                     if ($weixin_user['location_update'] > time() - 7200) {
@@ -525,7 +528,7 @@ class ajax extends AWS_CONTROLLER
                     }
                 }
 
-                $url = get_js_url('/m/question/' . $question_id);
+                $url = get_js_url('/m/choose/' . $question_id);
             } else {
                 //$url = get_js_url('/question/' . $question_id);
                   $url = get_js_url('/publish/pay/' . $question_id);

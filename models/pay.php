@@ -28,6 +28,7 @@ class pay_class extends AWS_MODEL
 			'userid' =>$data['userid'],
 			'contactname'=>$data['contactname'],
 			'money'=>$data['money'],
+			'zxid'=>$data['zxid'],
 			'ip'=>ip(),
 			'addtime' => time()
 		));
