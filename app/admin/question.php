@@ -115,9 +115,12 @@ class question extends AWS_ADMIN_CONTROLLER
 
 			foreach ($question_list AS $key => $val)
 			{
+				
 				$question_list[$key]['user_info'] = $question_list_user_infos[$val['published_uid']];
 				//获取付费级别bychao
+				
 				$level=$this->model('question')->getlevel($val['question_id']);
+				
 				$arr1=getcache('money1');
 				$question_list[$key]['level'] = isset($arr1[$level['money']]['title'])?$arr1[$level['money']]['title']:'Free';
 			}

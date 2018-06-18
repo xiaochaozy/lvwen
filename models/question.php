@@ -1563,8 +1563,9 @@ class question_class extends AWS_MODEL
 	/**
 	*addbychao
 	*/
-	public function getlevel($qid)
+	public function getlevel($zxid)
 	{
+		
 		$data=$this->fetch_row('pay_account','status="succ" and zxid =' .$zxid);
 		return $data;
 	}

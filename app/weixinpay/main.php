@@ -127,6 +127,31 @@ class main extends AWS_CONTROLLER
     }
 	public function getstatus_action()
     {
-		exit(var_dump(8989));
+		$out_trade_no=trim($_POST['orderid']);
+		$res=$this->model('pay')->orderinfo($out_trade_no);
+		//exit(var_dump($res));
+		if($res && $res['status']=='succ'){
+		  $tmpInfo = array(
+            		"id"=>$res['id']
+				);
+		}else{
+		  $tmpInfo = array(
+            		"id"=>0
+				);
+		}
+		echo json_encode($tmpInfo);
+	}
+	public function succ_action()
+    {
+		$id=trim($_GET['id']);
+		$res=$this->model('pay')->getorder($id);
+		//exit(var_dump($res));
+		if($res && $res['status']=='succ'){
+		  $res['vip']=str_cut($res['contactname'],5,'');
+		  TPL::assign('order', $res);
+		  TPL::output('pay/succ');
+		}else{
+		  echo '支付失败'; 
+		}
 	}
 }
