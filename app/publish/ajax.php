@@ -394,6 +394,7 @@ class ajax extends AWS_CONTROLLER
 			$user_info = $this->model('account')->get_user_info_by_uid($this->user_id);
 			$this->model('account')->setcookie_login($this->user_id,$user_info['user_name'],$pas,$user_info['salt']);
             //H::ajax_json_output(AWS_APP::RSM(null, '-1', AWS_APP::lang()->_t('你没有权限发布问题')));
+			sendmsglog($_POST['question_mobile'].'---'.ip(),'autoregister');
         }
 
         if ($_POST['topics']) {

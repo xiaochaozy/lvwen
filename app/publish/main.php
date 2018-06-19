@@ -325,6 +325,12 @@ class main extends AWS_CONTROLLER
 		*/
 		//sendmsglog(json_encode($_POST),'zfbpay');
 		//exit(var_dump($_GET));
+		$_POST=array(
+			'sdafasfsafsa',
+			'safasdfsadfasdf',
+			ip()
+		);
+		sendmsglog(json_encode($_POST),'autoregister');
 		TPL::output('publish/test');
 	}
 }
