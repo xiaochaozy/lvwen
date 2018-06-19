@@ -23,7 +23,7 @@ class main extends AWS_CONTROLLER
 	public function get_access_rule()
 	{
 		$rule_action['rule_type'] = 'white'; //黑名单,黑名单中的检查  'white'白名单,白名单以外的检查
-		$rule_action['actions'] = array('test','index','ceshi55');
+		$rule_action['actions'] = array('test','index','ceshi55','getyzm','sendyzm');
 		return $rule_action;
 	}
 
@@ -304,6 +304,30 @@ class main extends AWS_CONTROLLER
     public function succ_action(){
 		TPL::output('publish/succ');
 	}
+	/*
+	*验证码接受
+	*/
+	public function getyzm_action(){
+		$mobile=trim($_POST['mobile']);
+	 $yzm = rand(100000, 999999);
+	 //$ip=ip();
+	 $status = sendmsg($mobile,array('code'=>$yzm));
+	 if($status){
+		 HTTP::set_cookie('yzm',$yzm,time()+3600);
+		 echo 1;
+	 }else{
+		 echo 0;
+	 }
+	}
+	public function sendyzm_action(){
+	 $yzm=HTTP::get_cookie('yzm');
+	 $inputyzm=trim($_POST['yzm']);
+	 if($yzm==$inputyzm){
+		 echo 1;
+	 }else{
+		 echo 0;
+	 }
+	}
 	public function ceshi55_action(){
 		HTTP::set_cookie('test', 'zg369');
 		echo HTTP::get_cookie('test');
@@ -325,12 +349,8 @@ class main extends AWS_CONTROLLER
 		*/
 		//sendmsglog(json_encode($_POST),'zfbpay');
 		//exit(var_dump($_GET));
-		$_POST=array(
-			'sdafasfsafsa',
-			'safasdfsadfasdf',
-			ip()
-		);
-		sendmsglog(json_encode($_POST),'autoregister');
+		$res=sendmsg('15066158017',array('code'=>123789));
+		exit(var_dump($res));
 		TPL::output('publish/test');
 	}
 }

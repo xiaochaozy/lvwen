@@ -1572,4 +1572,12 @@ class question_class extends AWS_MODEL
 	public function paynums(){
 		return $this->count('pay_account');
 	}
+	/*
+	*获取订单列表
+	*/
+	public function get_order_list($where, $page, $pre_page, $order = 'id DESC')
+	{
+		$orderlist=$this->fetch_page('pay_account', $where, $order, $page, $pre_page);
+		return $orderlist;
+	}
 }

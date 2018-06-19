@@ -184,7 +184,7 @@ class question extends AWS_ADMIN_CONTROLLER
 	*/
 	public function order_list_action()
 	{
-		if ($order_list = $this->model('question')->get_report_list('status = ' . intval($_GET['status']), $_GET['page'], $this->per_page))
+		if ($order_list = $this->model('question')->get_order_list('', $_GET['page'], $this->per_page))
 		{
 			$order_total = $this->model('question')->paynums();
 
@@ -198,15 +198,15 @@ class question extends AWS_ADMIN_CONTROLLER
 
 		$this->crumb(AWS_APP::lang()->_t('用户举报'), 'admin/question/report_list/');
 
-		TPL::assign('list', $order_total);
-		TPL::assign('menu_list', $this->model('admin')->fetch_menu_list(306));
+		TPL::assign('list', $order_list);
+		//TPL::assign('menu_list', $this->model('admin')->fetch_menu_list(306));
 
 		TPL::assign('pagination', AWS_APP::pagination()->initialize(array(
 			'base_url' => get_js_url('/admin/question/order_list/') . implode('__', $url_param),
 			'total_rows' => $order_total,
 			'per_page' => $this->per_page
 		))->create_links());
-
+		//exit(var_dump(123));
 		TPL::output('admin/question/order_list');
 	}
 }

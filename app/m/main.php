@@ -1085,6 +1085,8 @@ class main extends AWS_CONTROLLER
 		TPL::assign('body_class', 'active');
 
 		TPL::assign('human_valid', human_valid('question_valid_hour'));
+		$iparea=get_real_city();
+		TPL::assign('iparea', $iparea);
 
 		TPL::output('m/publish');
 	}

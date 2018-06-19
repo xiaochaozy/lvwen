@@ -599,3 +599,73 @@ function sendmsglog($content,$filename=''){
     $filename=ROOT_PATH.'asklog'.DIRECTORY_SEPARATOR.$filename.".log";
     file_put_contents($filename,PHP_EOL.$content,FILE_APPEND);
 }
+
+function curl_function($url, $data=array(),$type="POST",$time=10){
+    if(trim($url) == ''){ return "";}
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $type);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT,$time);
+    $tmpInfo = curl_exec($ch);
+    ###$fp = fopen("ran.log", "a+");
+    ###fwrite($fp, $tmpInfo."\n");
+    ###fclose($fp);
+    if (curl_errno($ch)) {
+        //echo curl_errno($ch);
+        $tmpInfo = array(
+            "errcode"=>"999",
+            "errmsg"=>"not ok",
+            "msgid"=>"0",
+        );
+        $tmpInfo = json_encode($tmpInfo);
+    }
+    curl_close($ch);
+    return $tmpInfo;
+}
+/*
+*发送短信
+*/
+function sendmsg($mobile,$data=array()){
+	$sendUrl = 'http://v.juhe.cn/sms/send'; //短信接口的URL
+		$arr1=array();
+		foreach($data as $k=>$r){
+			$arr1[]='#'.$k.'#='.$r;
+		}
+		$value=implode('&',$arr1);
+        $smsConf = array(
+            'key'   => '6456dc79a7d28814a70dc7fe09203f9e', //您申请的APPKEY
+            'mobile'    => $mobile, //接受短信的用户手机号码
+            'tpl_id'    => '82834', //您申请的短信模板ID，根据实际情况修改
+            'tpl_value' =>$value //您设置的模板变量，根据实际情况修改
+        );
+
+        $content = curl_function($sendUrl,$smsConf); //请求发送短信
+
+        if($content){
+            $result = json_decode($content,true);
+            $error_code = $result['error_code'];
+			sendmsglog($error_code.'-'.$result['result']['sid'],'sendmsg');
+            if($error_code == 0){
+                //状态为0，说明短信发送成功
+                //echo "短信发送成功,短信ID：".$result['result']['sid'];
+				return true;
+				
+            }else{
+                //状态非0，说明失败
+                $msg = $result['reason'];
+                //echo "短信发送失败(".$error_code.")：".$msg;
+				return false;
+            }
+        }else{
+            //返回内容异常，以下可根据业务逻辑自行修改
+            return false;
+        }
+}
+
