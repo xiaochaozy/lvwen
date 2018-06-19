@@ -528,8 +528,12 @@ class ajax extends AWS_CONTROLLER
                         $this->model('geo')->set_location('question', $question_id, $weixin_user['longitude'], $weixin_user['latitude']);
                     }
                 }
-
-                $url = get_js_url('/m/choose/' . $question_id);
+				if(isset($_POST['posids']) && $_POST['posids']==2){
+					$url = get_js_url('/m/semchoose/' . $question_id);
+				}else{
+					$url = get_js_url('/m/choose/' . $question_id);
+				}
+                
             } else {
                 //$url = get_js_url('/question/' . $question_id);
                   $url = get_js_url('/publish/pay/' . $question_id);

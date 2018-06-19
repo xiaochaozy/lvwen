@@ -1245,7 +1245,12 @@ class main extends AWS_CONTROLLER
 	}
 	public function pay_action()
 	{
-		TPL::output('m/pay');
+		if(isset($_POST['posids']) && $_POST['posids']==2){
+			//TPL::output('m/pay');
+		}else{
+			
+		}
+		TPL::output('m/pay');	
 	}
 	public function succeed_action()
 	{
@@ -1258,6 +1263,8 @@ class main extends AWS_CONTROLLER
 //新增SEM页面
 	public function sempublish_action()
 	{
+		$iparea=get_real_city();
+		TPL::assign('iparea', $iparea);
 		TPL::output('m/sempublish');
 	}
 	public function semchoose_action()

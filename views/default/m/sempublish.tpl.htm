@@ -14,6 +14,7 @@
 		<input type="hidden" name="question_id" id="question_id" value="<?php echo $this->question_info['question_id']; ?>" />
 		<input type="hidden" name="ask_user_id" value="<?php echo $_POST['ask_user_id']; ?>" />
 		<input type="hidden" name="attach_access_key" value="<?php echo $this->attach_access_key; ?>" />
+        <input type="hidden" name="posids" value="2" />
 
 		<?php if ($this->weixin_media_id) { ?>
 		<input type="hidden" name="weixin_media_id" value="<?php echo $this->weixin_media_id; ?>" />
@@ -29,22 +30,18 @@
             </p>
 			<!-- end 问题补充 -->
             <!-- 地区 -->
+			            <div class="diqu">
 			<p class="are-tilel">地区：</p>
-			<select class="selectpicker form-control">
-                    <option>山东</option>
-                    <option>河北</option>
-                    <option>北京</option>
-                </select>
-                <select class="selectpicker form-control">
-                    <option>济南</option>
-                    <option>青岛</option>
-                    <option>北京</option>
-                </select>
-                <select class="selectpicker form-control">
-                    <option>历下区</option>
-                    <option>高新区</option>
-                    <option>历城区</option>
-                </select>
+               <span id="area_0" class="diqu"></span>
+               <span id="area_1" class="diqu"></span>
+               <span id="area_2" class="diqu"></span>
+               </div>
+<script type="text/javascript" src="/static/js/leray_area.js"></script>
+<script type="text/javascript">
+    leray_load_area("<?php echo $this->iparea['s_areaid']; ?>",0,0,"provid,cityid,qxid",1);
+    leray_load_area("<?php echo $this->iparea['c_areaid']; ?>","<?php echo $this->iparea['s_areaid']; ?>",1,"provid,cityid,qxid",1);
+    leray_load_area("<?php echo $this->iparea['s_areaid']; ?>","<?php echo $this->iparea['c_areaid']; ?>",2,"provid,cityid,qxid",2)
+</script>
             <div>
 			    <span class="ar-hold">请准确选择事件发生地，更有利于准确解答</span>
             </div>
@@ -210,7 +207,7 @@
 		     
 			 <div class="input-group tel-num">
 				 
-				 <input type="tel" name=""  class="form-control tel" value="" required="required" placeholder="" title="">
+				 <input type="tel" name="" id="question_mobile" class="form-control tel" value="" required="required" placeholder="" title="">
 				 <input type="button" id="btn" class="send-ma" value="免费获取验证码" onclick="sendemail()" /> 
 				 <div class="ver-hr"></div>	
 				 
@@ -228,12 +225,25 @@
   </div>
   <script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
   <script src="<?php echo G_STATIC_URL; ?>/mobile/js/toast.js"></script>
-  <script type="text/javascript"> 
+   <script type="text/javascript"> 
   var countdown=60; 
-  function sendemail(){
+  function sendmsg(){
 	  var obj = $("#btn");
-	  settime(obj);
+	  var mobile=$("#question_mobile").val();
+	  if(checkMobile(mobile)){//发送账户信息
+	  	$.post('/?/publish/getyzm/',{'mobile':mobile},function(data){
+		  if(data==1){
+		   alert("发送成功");
+		  }else{
+		   alert("发送失败");
+		  }
+        });
+	  }else{
+	  	  alert("手机号码格式错误，请重新输入");
+		  return false;
+	  }
 	  
+	  settime(obj);
 	  }
   function settime(obj) { //发送验证码倒计时
 	  if (countdown == 0) { 
@@ -251,6 +261,15 @@
 	  settime(obj) }
 	  ,1000) 
   }
+  function checkMobile(s){   
+	var regu =/^[1][3|4|5|8][0-9]{9}$/; 
+	var re = new RegExp(regu); 
+	if (re.test(s)) {
+		return true; 
+	}else{
+		return false; 
+	} 
+} 
   </script>
 </body>
 <script>
@@ -269,11 +288,21 @@
         });
     });
     function showtoastFromDivbottom(){
-		$('.toast_div').toast({
+		var yzm=$("#yzm").val();
+		$.post('/?/publish/sendyzm/',{'yzm':yzm},function(data){
+		  if(data==1){
+			 AWS.ajax_post($('#question_form')); return false;
+		  }else{
+		   	$('.toast_div').toast({
 			content:'验证码错误，请重新输入',
 			duration:2000,
-	
-		});
+			});
+			return false;
+		  }
+        });
+		
+		
+		
 	}
 </script>
 <?php TPL::output('m/footer1.tpl.htm'); ?>
