@@ -177,13 +177,13 @@
             $(".money").html("99.90");
             $(".mon2").html("99.9");
             $(".tt").html("vip3");
-            var wxurl = '/?/weixinpay/?zfid=2';
+            var wxurl = '/?/weixinpay/?zfid=3';
         } else {
             $("#zfb").attr('href', '/?/pay/?topay=1&zfid=3');
             $(".money").html("59.90");
             $(".mon2").html("59.9");
             $(".tt").html("VIP2");
-            var wxurl = '/?/weixinpay/?zfid=3';
+            var wxurl = '/?/weixinpay/?zfid=2';
         }
         //加载微信图片
 		$.ajax({
@@ -227,13 +227,14 @@ var i = 1;
        success: function (data) {
            if (data.id > 0) {
                  console.log('成功');
-                 window.location.href = '/?/pay/succ/';
+                 window.location.href = '/?/weixinpay/succ/id='+data.id;
                clearInterval(iCount);
            }
            console.log(data);
           }
      });
      i++;
+	 console.log(i);
   }
 
 </script>

@@ -46,6 +46,9 @@ class pay_class extends AWS_MODEL
 		$data=$this->fetch_row('pay_account','id =' .$id);
 		return $data;	
 	}
+	public function orderinfo($trade_sn){
+		return $this->fetch_row('pay_account','trade_sn = "'.$trade_sn.'"');
+	}
 
 	
 }
