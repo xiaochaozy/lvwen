@@ -98,6 +98,10 @@ class question extends AWS_ADMIN_CONTROLLER
 		{
 			$where[] = 'best_answer > 0';
 		}
+		if ($_GET['question_mobile'])
+		{
+			$where[] = 'question_mobile ="'.trim($_GET['question_mobile']).'"';
+		}
 
 		if ($question_list = $this->model('question')->fetch_page('question', implode(' AND ', $where), 'question_id DESC', $_GET['page'], $this->per_page))
 		{

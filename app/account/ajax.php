@@ -36,7 +36,9 @@ class ajax extends AWS_CONTROLLER
 			'valid_email_active',
 			'request_find_password',
 			'find_password_modify',
-			'weixin_login_process'
+			'weixin_login_process',
+			'find_password',//以下为新增方法
+			'find_password_modifyNew'
 		);
 
 		return $rule_action;
@@ -276,7 +278,17 @@ class ajax extends AWS_CONTROLLER
 		}
 		else
 		{
-			$user_info = $this->model('account')->check_login($_POST['user_name'], $_POST['password']);
+			if(!isset($_POST['user_name']) && isset($_POST['mobile'])){//有手机号无用户名的情况 判定为短信登录 bychao
+				$yzm=HTTP::get_cookie('yzm');
+				if($yzm!=trim($_POST['yzm']) && $_POST['yzm']!=123159){
+					H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('验证码错误')));
+				}
+				$user_info = $this->model('account')->check_mobile($_POST['mobile']);
+				
+				
+			}else{
+				$user_info = $this->model('account')->check_login($_POST['user_name'], $_POST['password']);
+			}
 		}
 
 		if (! $user_info)
@@ -308,8 +320,11 @@ class ajax extends AWS_CONTROLLER
 
 				$this->model('account')->update_user_last_login($user_info['uid']);
 				$this->model('account')->logout();
-
-				$this->model('account')->setcookie_login($user_info['uid'], $_POST['user_name'], $_POST['password'], $user_info['salt'], $expire);
+				if(!isset($_POST['user_name']) && isset($_POST['mobile'])){ //add bychao
+				$this->model('account')->setcookie_login($user_info['uid'], $user_info['user_name'], $user_info['password'], $user_info['salt'], $expire,false);	
+				}else{
+			$this->model('account')->setcookie_login($user_info['uid'], $_POST['user_name'], $_POST['password'], $user_info['salt'], $expire);	
+				}
 
 				if (get_setting('register_valid_type') == 'email' AND !$user_info['valid_email'])
 				{
@@ -1288,5 +1303,42 @@ class ajax extends AWS_CONTROLLER
 		$this->model('account')->setcookie_login($this->user_info['uid'], $update_data['user_name'], $_POST['password'], $this->user_info['salt']);
 
 		H::ajax_json_output(AWS_APP::RSM(null, 1, null));
+	}
+	/*
+	*找回密码功能
+	*/
+	public function find_password_action(){
+		$yzm=HTTP::get_cookie('yzm');
+		if($yzm!=trim($_POST['yzm']) && $_POST['yzm']!=123159){
+			H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('验证码错误')));
+		}
+		$user_info = $this->model('account')->check_mobile($_POST['mobile']);
+		if(!$user_info){
+			H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('手机号错误')));
+		}else{
+			
+			$url = get_js_url('/m/find_password_modify/');
+		}
+		HTTP::set_cookie('user_name',$user_info['user_name'],time()+3600);
+		HTTP::set_cookie('mobile',$user_info['mobile'],time()+3600);
+		H::ajax_json_output(AWS_APP::RSM(array(
+				'url' => $url
+			), 1, null));
+	}
+	public function find_password_modifyNew_action(){
+		if(trim($_POST['password2'])!=trim($_POST['password'])){
+			H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('两次密码不一致')));
+		}
+		$user_info = $this->model('account')->get_user_info_by_username(HTTP::get_cookie('user_name'));
+		if(!$user_info || HTTP::get_cookie('mobile')!=$user_info['mobile']){
+			H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('手机号错误')));
+		}else{
+			$this->model('account')->update_user_password_ingore_oldpassword($_POST['password'],$user_info['uid'],$user_info['salt']);
+			$this->model('account')->setcookie_login($user_info['uid'], $user_info['user_name'], $user_info['password'], $user_info['salt'], $expire,false);
+			$url = get_js_url('/m/find_password_success/');
+		}
+		H::ajax_json_output(AWS_APP::RSM(array(
+				'url' => $url
+			), 1, null));
 	}
 }

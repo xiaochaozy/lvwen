@@ -75,15 +75,16 @@ class main extends AWS_CONTROLLER
 			}
 		}
 
-		if (!$this->user_id AND !$this->user_info['permission']['visit_site'] AND $_GET['act'] != 'login' AND $_GET['act'] != 'register')
+		if (!$this->user_id AND !$this->user_info['permission']['visit_site'] AND !in_array($_GET['act'],array('login','register','login_code')))
 		{
+			
 			HTTP::redirect('/m/login/url-' . base64_current_path());
 		}
 
 		switch ($_GET['act'])
 		{
 			default:
-				if (!$this->user_id)
+				if (!$this->user_id && $_GET['act']!='login_code')
 				{
 					HTTP::redirect('/m/login/url-' . base64_current_path());
 				}
@@ -622,15 +623,6 @@ class main extends AWS_CONTROLLER
 
 	public function find_password_modify_action()
 	{
-		if (!$active_code_row = $this->model('active')->get_active_code($_GET['key'], 'FIND_PASSWORD'))
-		{
-			H::redirect_msg(AWS_APP::lang()->_t('链接已失效'), '/');
-		}
-
-		if ($active_code_row['active_time'] OR $active_code_row['active_ip'])
-		{
-			H::redirect_msg(AWS_APP::lang()->_t('链接已失效'), '/');
-		}
 
 		TPL::output('m/find_password_modify');
 	}

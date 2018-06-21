@@ -107,6 +107,19 @@ class account_class extends AWS_MODEL
 
         return $this->fetch_one('users', 'uid', "email = '" . $this->quote($email) . "'");
     }
+	/*
+	* 手机号登录
+	*/
+	public function check_mobile($mobile)
+    {
+        if(!preg_match('/^(?:1[3|4|5|6|7|8]\d{9})$/',$mobile)){
+        	return TRUE;
+    	}
+ 		if ($uid = $this->fetch_one('users', 'uid', "mobile = '" . $this->quote($mobile) . "'"))
+        {
+            return $this->get_user_info_by_uid($uid, false, true);
+        }
+    }
 
     /**
      * 用户登录验证
