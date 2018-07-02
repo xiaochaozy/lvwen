@@ -11,13 +11,13 @@
         <div class="dd_xq">
             <div class="zhifu-r">
                 <div class="box1">
-                    <p><b>服务项目：</b><span>VIP1咨询服务</span></p>
+                    <p><b>服务项目：</b><span><?php echo $this->tit['title'];?>咨询服务</span></p>
                 </div>
                 <div class="box1">
-                    <p><b>咨询内容：</b>孩子不小心从楼梯上滚不小心从楼梯上不小心从楼梯上不小心从楼梯上不小心从楼梯上下来了</p>
+                    <p><b>咨询内容：</b><?php echo $this->info['question_detail'];?></p>
                 </div>
                 <div class="box1">
-                    <p><b>支付金额：</b><span>￥19.90元</span></p>
+                    <p><b>支付金额：</b><span>￥<?php echo $this->tit['money'];?>元</span></p>
                 </div>
             </div>
             <div class="zhifu_way">
@@ -32,7 +32,7 @@
                         <img src="static/mobile/img/right.png" class="pic-r">
                     </div>
                 </a>
-                <a href="/?/pay/?topay=1&zfid=1&from=1">
+                <a href="/?/pay/?topay=1&zfid=<?php echo $this->zfid;?>&from=1">
                     <div class="zf-zfb">
                         <img src="static/mobile/img/zfb.png" class="pic">
                         <div class="pg">
@@ -51,11 +51,13 @@
        $("#wxzf").click(function(){
 			$.ajax({
                 type: "GET",
-                url: "/?/weixinpay/?zfid=1&from=1",
+                url: "/?/weixinpay/?zfid=<?php echo $this->zfid;?>&from=1",
                 dataType: "json",
                 success:function(data){
-                    //alert(data.mweb_url);
-                    console.log(data.mweb_url);
+					
+                    console.log(data);
+					//alert(data.mweb_url);
+					//return false;
                     window.location.href =data.mweb_url;
                     //console.log(data);
                 }

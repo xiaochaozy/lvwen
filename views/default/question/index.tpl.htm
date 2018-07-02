@@ -50,7 +50,7 @@
 					<div class="aw-mod aw-question-detail aw-item">
 						<div class="mod-head">
 							<h1>
-								<?php echo $this->question_info['question_content']; ?>
+								<?php echo str_cut($this->question_info['question_detail'],69); ?>
 							</h1>
 							<input type="hidden" id="share_content" value=""/>
 							<input type="hidden" id="share_url" value=""/>
@@ -152,10 +152,17 @@
 								</div>
 							</div>
 							<?php } ?>
+                            
 						</div>
 						<div class="mod-footer">
 							<div class="meta">
-							    <span class="text-color-999"><a href="" >山东</a> - <a href="" >济南</a></span>
+                            <?php $areas=getcache(1);$areas=$areas['data'];
+                            $pname=$areas[$this->question_info['provid']]['name'];
+                            $cname=$areas[$this->question_info['cityid']]['name'];
+                            ?>
+							    <span class="text-color-999">
+                                <a href="http://ask.itdapeng.com/?/topic/<?php echo urlencode($pname);?>"><?php echo $pname;?></a> - 
+                                <a href="http://ask.itdapeng.com/?/topic/<?php echo urlencode($cname);?>"><?php echo $cname;?></a></span>
 								<span class="text-color-999"><?php echo date_friendly($this->question_info['add_time'], 604800, 'Y-m-d'); ?></span>
 
 								<a data-id="<?php echo $this->question_info['question_id']; ?>" data-type="question" class="aw-add-comment text-color-999 <?php if ($this->question_info['comment_count'] > 0) {?>active<?php }?>" data-comment-count="<?php echo $this->question_info['comment_count']; ?>" data-first-click="<?php if ($this->question_info['comment_count'] == 0) {?>hide<?php }?>"><i class="icon icon-comment"></i><?php if ($this->question_info['comment_count']) { ?><?php _e('%s 条评论', $this->question_info['comment_count']); ?><?php } else { ?><?php _e('添加评论'); ?><?php } ?></a>
@@ -169,8 +176,11 @@
 
 								<?php if ($this->user_info['permission']['is_administortar'] OR $this->user_info['permission']['is_moderator'] OR $this->user_id == $this->question_info['published_uid']) { ?>
 								<a class="text-color-999 aw-add-question-related hidden-xs"><i class="icon icon-bind"></i> <?php _e('相关链接'); ?></a>
-								<a class="text-color-999 aw-add-question-related hidden-xs"><i class="icon icon-phone"></i>接洽方式</a>
+								
 								<?php } ?>
+                                <?php if($this->user_info['uid']){?>
+                                <a class="text-color-999 hidden-xs jqfs"><i class="icon icon-phone"></i><span>接洽方式</span></a>
+                                <?php } ?>
 								<div class="pull-right more-operate">
 									<?php if ($this->user_id != $this->question_info['published_uid'] AND $this->user_id) { ?><a <?php if (!$this->question_thanks) { ?>data-placement="bottom" title="" data-toggle="tooltip" data-original-title="<?php _e('感谢提问者'); ?>" onclick="AWS.User.question_thanks($(this), <?php echo $this->question_info['question_id']; ?>);"<?php } ?> class="aw-icon-thank-tips text-color-999"><i class="icon icon-thank"></i><?php if ($this->question_thanks) { ?><?php _e('已感谢'); ?><?php } else { ?><?php _e('感谢'); ?><?php } ?></a>
 									<?php } ?>
@@ -638,7 +648,20 @@
 </script>
 
 <script type="text/javascript">
-
+$(".jqfs").click(function(){
+	$.ajax({
+			type: "GET",
+			url: '/?/question/getTel/?question_id=<?php echo $this->question_info["question_id"]?>',
+			success:function(data, st){
+				if(data==0){
+					alert('认证律师解答后可接洽此问题。');
+					return false;
+				}else{
+					$('.jqfs').find('span').html(data);
+				}
+			}
+	});
+})
 $("#question_share").click(function(){
     $('#share_content').val('<?php echo htmlspecialchars_decode($this->question_info["question_content"]);?>');
     $('#share_title').val('<?php echo htmlspecialchars_decode($this->question_info["question_content"]);?>');

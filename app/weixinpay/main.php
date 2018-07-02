@@ -65,7 +65,7 @@ class main extends AWS_CONTROLLER
 		if(isset($_GET['from']) && $_GET['from']==1){
 			$input->SetTrade_type("MWEB");
 		}else{
-		$input->SetTrade_type("NATIVE");
+			$input->SetTrade_type("NATIVE");
 		}
 		//$input->SetTrade_type("MWEB");
 		
@@ -79,6 +79,7 @@ class main extends AWS_CONTROLLER
 			$result = $notify->GetPayUrl($input);
 			//exit(var_dump($result));
 			if(isset($_GET['from']) && $_GET['from']==1){
+				//sendmsglog(json_encode($_SERVER['HTTP_REFERER']),'zfbpay1');
 				$redirect='https://www.lvwen360.com/?/m/succeed/';
 				$result['mweb_url'].='&redirect_url='.urlencode($redirect);
 				//echo $result['mweb_url'].'<br/>';

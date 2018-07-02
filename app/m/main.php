@@ -1242,6 +1242,14 @@ class main extends AWS_CONTROLLER
 		}else{
 			
 		}
+		$zfid=intval($_GET['zfid']);
+		$marr=getcache('money');
+		$tit=$marr[$zfid];
+		$zxid=HTTP::get_cookie('askid');
+		$info=$this->model('question')->get_question_info_by_id($zxid);
+		TPL::assign('info', $info);
+		TPL::assign('tit', $tit);
+		TPL::assign('zfid', $zfid);
 		TPL::output('m/pay');	
 	}
 	public function succeed_action()

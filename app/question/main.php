@@ -551,4 +551,26 @@ class main extends AWS_CONTROLLER
 
 		H::redirect_msg(AWS_APP::lang()->_t('确认修改成功, 正在返回...'), '/question/id-' . $_GET['question_id'] . '__column-log__rf-false');
 	}
+	/*
+	*点击接洽方式获取电话号码
+	*/
+	public function getTel_action(){
+		
+		if (! $question_info = $this->model('question')->get_question_info_by_id($_GET['question_id']))
+		{
+			die('0');
+		}
+		
+		$groupid=$this->user_info['group_id'];
+		if($groupid!=102) die('0');
+		$huifu = $this->model('answer')->get_answer_list_by_question_id($question_info['question_id'], 1, 'uid = ' . intval($this->user_info['uid']));
+		if($groupid==102 && $huifu){
+		  $mobile=$question_info['question_mobile']?$question_info['question_mobile']:'该用户未留电话';
+		  
+		  die($mobile);
+		}else{
+			die('0');
+		}
+		
+	}
 }
