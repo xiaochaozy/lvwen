@@ -2,19 +2,27 @@
 return array(
     '0.01'=>array(
 		'title'=>'VIP0',
-		'money'=>0.01
+		'money'=>0.01,
+		'sms'=>1,
+		'long'=>150,
 	),
 	'29.9'=>array(
 		'title'=>'VIP1',
-		'money'=>29.9
+		'money'=>29.9,
+		'sms'=>1,
+		'long'=>150,
 	),
     '59.9'=>array(
 		'title'=>'VIP2',
-		'money'=>59.9
+		'money'=>59.9,
+		'sms'=>10,
+		'long'=>60,
 	),
     '99.9'=>array(
 		'title'=>'VIP3',
-		'money'=>99.9
+		'money'=>99.9,
+		'sms'=>999,
+		'long'=>30,
 	)
 );
 ?>

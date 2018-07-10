@@ -17,8 +17,8 @@
             <div class="cg_1">
               <div class="cg_2">
                 <p><b>审核时间：</b>已审核通过。</p>
-                <p><b>解答时间：</b>150分钟以内，预计会在2018-02-28 19:23 之前给予解答。</p>
-                <p><b>短信通知：</b>1次（第1次解答短信提醒</p>
+                <p><b>解答时间：</b><?php echo $this->marr1['long'];?>分钟以内，预计会在<?php echo date('Y-m-d H:i',(time()+$this->marr1['long']))?> 之前给予解答。</p>
+                <p><b>短信通知：</b><?php echo $this->marr1['sms']==999?'不限次数':$this->marr1['sms'].'次'?>（<?php echo $this->marr1['sms']==999?'不限次数':'前'.$this->marr1['sms'].'位'?>解答短信提醒</p>
               </div>
               <div class="cg_3"></div>
               <div class="cg_2">

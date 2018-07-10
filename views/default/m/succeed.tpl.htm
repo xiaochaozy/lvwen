@@ -8,18 +8,18 @@
 <!-- 内容 -->
     <div class="container active">
         <div class="dd_xq">
-            <div class="cg-titile">您的“VIP1”咨询服务支付成功。</div>
+            <div class="cg-titile">您的“<?php echo $this->order['vip']?>”咨询服务支付成功。</div>
             <div class="cg-dd">
                 <div class="cg-dd-xc">
-                    <p><b>服务项目：</b>VIP1咨询服务</p>
-                    <p><b>解答时间：</b> 2018-03-20 15:57之前</p>
-                    <p><b>短信通知：</b>前1位解答短信提醒</p>
-                    <p><b>支付金额：</b><span>￥19.90元</span></p>
+                    <p><b>服务项目：</b><?php echo $this->order['vip']?>咨询服务</p>
+                    <p><b>解答时间：</b> <?php echo date('Y-m-d H:i',(time()+$this->marr1['long']))?>之前</p>
+                    <p><b>短信通知：</b><?php echo $this->marr1['sms']==999?'不限次数':'前'.$this->marr1['sms'].'位'?>解答短信提醒</p>
+                    <p><b>支付金额：</b><span>￥<?php echo $this->order['money']?>元</span></p>
                 </div>
                 <div class="cg-dd-xx">
                     <b>在线查看回复</b>
-                    <p>1) 关注<a href="">个人动态</a>消息通知</p>
-                    <p>2) <a href="">点击查看</a> 该问题</p>
+                    <p>1) 关注<a href="https://ask.itdapeng.com/?/m/notifications/">个人动态</a>消息通知</p>
+                    <p>2) <a href="https://ask.itdapeng.com/?/m/question/<?php echo $this->order['zxid']?>">点击查看</a> 该问题</p>
                     <p>3) 注意接收短信通知。</p>
                 </div>
             </div>

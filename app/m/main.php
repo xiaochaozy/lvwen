@@ -1254,6 +1254,17 @@ class main extends AWS_CONTROLLER
 	}
 	public function succeed_action()
 	{
+		$id=trim($_GET['id']);
+		$marr1=getcache('money1');
+		$res=$this->model('pay')->getorder($id);
+		//exit(var_dump($res));
+		if($res && $res['status']=='succ'){
+		  $res['vip']=str_cut($res['contactname'],5,'');
+		  TPL::assign('order', $res);
+		  TPL::assign('marr1', $marr1[$res['money']]);
+		}else{
+		  H::redirect_msg(AWS_APP::lang()->_t('支付失败'));
+		}
 		TPL::output('m/succeed');
 	}
 	public function login_code_action()

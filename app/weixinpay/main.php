@@ -71,22 +71,26 @@ class main extends AWS_CONTROLLER
 		
 		$input->SetProduct_id("123456789");
         $input->SetSpbill_create_ip($ip);
+		
         //echo $input->GetSpbill_create_ip();
         //echo '<br/>';
 		
 		try
  		{
 			$result = $notify->GetPayUrl($input);
+			
 			//exit(var_dump($result));
 			if(isset($_GET['from']) && $_GET['from']==1){
 				//sendmsglog(json_encode($_SERVER['HTTP_REFERER']),'zfbpay1');
-				$redirect='https://www.lvwen360.com/?/m/succeed/';
+				$payinfo=$this->model('pay')->orderinfo($out_trade_no);
+				$redirect='https://www.lvwen360.com/?/m/succeed/?id='.$payinfo['id'];
 				$result['mweb_url'].='&redirect_url='.urlencode($redirect);
 				//echo $result['mweb_url'].'<br/>';
 				$tmpInfo = array(
             		"mweb_url"=>$result['mweb_url'],
             		"orderid"=>$out_trade_no,
 				);
+				//echo '<a href="'.$result['mweb_url'].'">gotopay</a>';
 			}else{
 				$tmpInfo = array(
             		"url"=>$result["code_url"],
@@ -145,11 +149,13 @@ class main extends AWS_CONTROLLER
 	public function succ_action()
     {
 		$id=trim($_GET['id']);
+		$marr1=getcache('money1');
 		$res=$this->model('pay')->getorder($id);
 		//exit(var_dump($res));
 		if($res && $res['status']=='succ'){
 		  $res['vip']=str_cut($res['contactname'],5,'');
 		  TPL::assign('order', $res);
+		  TPL::assign('marr1', $marr1[$res['money']]);
 		  TPL::output('pay/succ');
 		}else{
 		  echo '支付失败'; 
