@@ -284,6 +284,10 @@ class ajax extends AWS_CONTROLLER
 					H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('验证码错误')));
 				}
 				$user_info = $this->model('account')->check_mobile($_POST['mobile']);
+				if (! $user_info)
+				{
+					H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('手机号不存在！')));
+				}
 				
 				
 			}else{
