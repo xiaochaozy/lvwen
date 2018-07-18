@@ -14,9 +14,11 @@
 
 require_once 'config.php';
 require_once 'pagepay/service/AlipayTradeService.php';
+require_once '../../system/system.php';
 
 $arr=$_POST;
 $alipaySevice = new AlipayTradeService($config); 
+$_POST['over']="success_999999";
 $alipaySevice->writeLog(var_export($_POST,true));
 $result = $alipaySevice->check($arr);
 
@@ -66,6 +68,10 @@ if($result) {//验证成功
 		//付款完成后，支付宝系统发送该交易状态通知
     }
 	//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
+	$mysql=new AWS_MODEL();
+			$orderinfo=$mysql->fetch_row('pay_account','trade_sn ="'.$_POST['out_trade_no'].'"');
+			$sql1="update aws_pay_account set `status`='succ' where trade_sn='".$_POST['out_trade_no']."'";
+			$mysql->query($sql1);
 	echo "success";	//请不要修改或删除
 }else {
     //验证失败

@@ -61,7 +61,7 @@ class main extends AWS_CONTROLLER
 		$input->SetTotal_fee($money*100);
 		$input->SetTime_start(date("YmdHis"));
 		$input->SetTime_expire(date("YmdHis", time() + 600));
-		$input->SetNotify_url("https://www.lvwen360.com/app/weixinpay/notify.php");
+		$input->SetNotify_url(AWS_APP::config()->get('system')->weburl."app/weixinpay/notify.php");
 		if(isset($_GET['from']) && $_GET['from']==1){
 			$input->SetTrade_type("MWEB");
 		}else{
@@ -83,7 +83,7 @@ class main extends AWS_CONTROLLER
 			if(isset($_GET['from']) && $_GET['from']==1){
 				//sendmsglog(json_encode($_SERVER['HTTP_REFERER']),'zfbpay1');
 				$payinfo=$this->model('pay')->orderinfo($out_trade_no);
-				$redirect='https://www.lvwen360.com/?/m/succeed/?id='.$payinfo['id'];
+				$redirect=AWS_APP::config()->get('system')->weburl.'?/m/succeed/?id='.$payinfo['id'];
 				$result['mweb_url'].='&redirect_url='.urlencode($redirect);
 				//echo $result['mweb_url'].'<br/>';
 				$tmpInfo = array(
@@ -151,7 +151,6 @@ class main extends AWS_CONTROLLER
 		$id=trim($_GET['id']);
 		$marr1=getcache('money1');
 		$res=$this->model('pay')->getorder($id);
-		//exit(var_dump($res));
 		if($res && $res['status']=='succ'){
 		  $res['vip']=str_cut($res['contactname'],5,'');
 		  TPL::assign('order', $res);

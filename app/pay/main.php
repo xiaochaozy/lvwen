@@ -23,7 +23,7 @@ class main extends AWS_CONTROLLER
 	public function get_access_rule()
 	{
 		$rule_action['rule_type'] = 'white'; //黑名单,黑名单中的检查  'white'白名单,白名单以外的检查
-		$rule_action['actions'] = array('index','pay','zhifu');
+		$rule_action['actions'] = array('index','pay','zhifu','notifyurl');
 		return $rule_action;
 	}
 
@@ -124,6 +124,13 @@ if($result) {//验证成功
 
 	//支付宝交易号
 	$trade_no = htmlspecialchars($_GET['trade_no']);
+		$marr1=getcache('money1');
+		$res=$this->model('pay')->orderinfo($out_trade_no);
+		
+		 $res['vip']=str_cut($res['contactname'],5,'');
+		  TPL::assign('order', $res);
+		  TPL::assign('marr1', $marr1[$res['money']]);
+		  
 	//$res=$this->model('pay')->success($out_trade_no);	
 	//echo "验证成功<br />支付宝交易号：".$trade_no;
 	TPL::output('pay/succ');
@@ -136,13 +143,14 @@ else {
 	}
 	
  //异步通知
-  public function zfbnotify_action(){
+  public function notifyurl_action(){
   	require_once 'config.php';
 	require_once 'pagepay/service/AlipayTradeService.php';
 	$arr=$_POST;
 	$alipaySevice = new AlipayTradeService($config); 
 	$alipaySevice->writeLog(var_export($_POST,true));
 	$result = $alipaySevice->check($arr);
+	sendmsglog(json_encode($result),'zfbpay');
 	if($result) {
 		$out_trade_no = $_POST['out_trade_no'];
 	//支付宝交易号

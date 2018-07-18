@@ -227,7 +227,7 @@ var i = 1;
        success: function (data) {
            if (data.id > 0) {
                  console.log('成功');
-                 window.location.href = '/?/weixinpay/succ/id='+data.id;
+                 window.location.href = '/?/weixinpay/succ/?id='+data.id;
                clearInterval(iCount);
            }
            console.log(data);
