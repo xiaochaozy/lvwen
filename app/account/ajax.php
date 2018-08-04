@@ -349,6 +349,8 @@ class ajax extends AWS_CONTROLLER
 				else if ($_POST['_is_mobile'])
 				{
 					$url = get_js_url('/m/');
+				}else{
+					$url = get_js_url('/');
 				}
 
 				if (get_setting('ucenter_enabled') == 'Y')
@@ -1320,8 +1322,12 @@ class ajax extends AWS_CONTROLLER
 		if(!$user_info){
 			H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('手机号错误')));
 		}else{
+			if (is_mobile()){
+				$url = get_js_url('/m/find_password_modify/');
+			}else{
+				$url = get_js_url('/account/find_password/find_password_modify/');
+			}
 			
-			$url = get_js_url('/m/find_password_modify/');
 		}
 		HTTP::set_cookie('user_name',$user_info['user_name'],time()+3600);
 		HTTP::set_cookie('mobile',$user_info['mobile'],time()+3600);
@@ -1337,9 +1343,16 @@ class ajax extends AWS_CONTROLLER
 		if(!$user_info || HTTP::get_cookie('mobile')!=$user_info['mobile']){
 			H::ajax_json_output(AWS_APP::RSM(null, -1, AWS_APP::lang()->_t('手机号错误')));
 		}else{
-			$this->model('account')->update_user_password_ingore_oldpassword($_POST['password'],$user_info['uid'],$user_info['salt']);
+			
+			$res=$this->model('account')->update_user_password_ingore_oldpassword($_POST['password'],$user_info['uid'],$user_info['salt']);
+			//exit(var_dump($_POST['password']));
 			$this->model('account')->setcookie_login($user_info['uid'], $user_info['user_name'], $user_info['password'], $user_info['salt'], $expire,false);
-			$url = get_js_url('/m/find_password_success/');
+			if (is_mobile()){
+				$url = get_js_url('/m/find_password_success/');
+			}else{
+				$url = get_js_url('/account/find_password/process_success/');
+			}
+			
 		}
 		H::ajax_json_output(AWS_APP::RSM(array(
 				'url' => $url

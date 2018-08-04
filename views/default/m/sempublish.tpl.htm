@@ -50,7 +50,7 @@
 			<!-- 手机 -->
 			<p class="are-tilel">手机：</p>
                  <span>
-			     <input type="text" name="" class=" selectpicker2 form-control" value="" placeholder="请输入您的常用手机号" required="required" pattern="" title="">
+			     <input type="text" name="question_mobile" class=" selectpicker2 form-control" value="" placeholder="请输入您的常用手机号" required="required" pattern="" title="">
 			    </span>
                 <span class="numb-err text-waring">✔输入正确</span>
                 <br>
@@ -208,13 +208,13 @@
 			 <div class="input-group tel-num">
 				 
 				 <input type="tel" name="" id="question_mobile" class="form-control tel" value="" required="required" placeholder="" title="">
-				 <input type="button" id="btn" class="send-ma" value="免费获取验证码" onclick="sendemail()" /> 
+				 <input type="button" id="btn" class="send-ma" value="免费获取验证码" onclick="sendmsg()" /> 
 				 <div class="ver-hr"></div>	
 				 
 			 </div>
 			 <div class="input-group tel-num">
 				 
-				<input type="tel" name=""  class="form-control tel" value="" required="required" placeholder="请输入您收到的验证码" title="">		
+				<input type="text" name="yzm" id="yzm" class="form-control tel" value="" required="required" placeholder="请输入您收到的验证码" title="">		
 			</div>
 			<a class="btn btn-large btn-success btn-publish-submit text-center md-submit" id="publish_submit" onclick="showtoastFromDivbottom()" >提交问题</a>
 			 
@@ -223,7 +223,6 @@
 	  </div>
 	</div>
   </div>
-  <script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
   <script src="<?php echo G_STATIC_URL; ?>/mobile/js/toast.js"></script>
    <script type="text/javascript"> 
   var countdown=60; 

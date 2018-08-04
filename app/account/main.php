@@ -314,4 +314,5 @@ class main extends AWS_CONTROLLER
 		TPL::output('account/login_code');
 		TPL::import_css('css/login.css');
 	}
+	
 }

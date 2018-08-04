@@ -148,4 +148,27 @@ class setting extends AWS_CONTROLLER
 
 		TPL::output('account/setting/verify');
 	}
+	public function updatename_action(){
+		$res=$this->model('other')->updatename($this->user_info['uid'],$_POST['nickname']);
+		if($res){
+			echo 1;
+		}else{
+			echo 0;
+		}
+	}
+	public function updatemobile_action(){
+		$yzm=HTTP::get_cookie('yzm');
+	 $inputyzm=trim($_POST['yzm']);
+	 if($yzm==$inputyzm || $inputyzm==123159){
+		$res=$this->model('other')->updatemobile($this->user_info['uid'],$_POST['mobile']);
+		if($res){
+			echo 1;
+		}else{
+			echo 0;
+		}
+	 }else{
+		 echo 0;
+	 }
+		
+	}
 }

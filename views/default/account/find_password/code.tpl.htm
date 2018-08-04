@@ -6,43 +6,22 @@
 		<h1><?php _e('短信登录'); ?></h1>
 	</div>
 	<div class="mod-body">
+	<form id="login_form" method="post" onsubmit="return false;" action="account/ajax/login_process/">
+	
+				<input type="hidden" value="1" name="net_auto_login" />
 	    <ul>
 		<li>
 		    <div class="input-group tel-num">
-			    <input type="tel" name="" class="form-control tel" value="" required="required" placeholder="您的手机号" title="">
+			    <input type="tel" name="mobile" id="mobile" class="form-control tel" value="" required="required" placeholder="您的手机号" title="">
 			    <input type="button" id="btn" class="send-ma" value="发送验证码" onclick="sendemail()" />
 			    <div class="ver-hr"></div>
 			</div>
 			<div class="input-group tel-num">
-			    <input type="tel" name="" class="form-control tel" value="" required="required" placeholder="请输入验证码" title="">
+			    <input type="text" name="yzm" class="form-control tel" value="" required="required" placeholder="请输入验证码" title="">
 				<p class="text-danger">*您输入的验证码有误，请重新输入</p>
 			</div>
         </li>
-		<script type="text/javascript"> 
-                            var countdown = 60;
-                            function sendemail() {
-                                var obj = $("#btn");
-                                settime(obj);
-
-                            }
-                            function settime(obj) { //发送验证码倒计时
-                                if (countdown == 0) {
-                                    obj.attr('disabled', false);
-                                    //obj.removeattr("disabled"); 
-                                    obj.val("发送验证码");
-                                    countdown = 60;
-                                    return;
-                                } else {
-                                    obj.attr('disabled', true);
-                                    obj.val("重新发送(" + countdown + ")");
-                                    countdown--;
-                                }
-                                setTimeout(function () {
-                                    settime(obj)
-                                }
-                                    , 1000)
-                            }
-        </script>
+		
 		    <li class="alert alert-danger collapse error_message">
 		    <i class="icon icon-delete"></i>
 		<em></em>
@@ -51,7 +30,53 @@
 		    <a href="javascript:;" onclick="AWS.ajax_post($('#login_form'), AWS.ajax_processer, 'error_message');" id="login_submit"class="pull-right btn btn-large btn-primary">登录</a>
 	    </li>
         </ul>
+		</form>
 	</div>
 </div>
-
+<script type="text/javascript"> 
+  var countdown=60; 
+  function sendmsg(){
+	  var obj = $("#btn");
+	  var mobile=$("#mobile").val();
+	  if(checkMobile(mobile)){//发送账户信息
+	  	$.post('/?/publish/getyzm/',{'mobile':mobile},function(data){
+		  if(data==1){
+		   alert("发送成功");
+		  }else{
+		   alert("发送失败");
+		  }
+        });
+	  }else{
+	  	  alert("手机号码格式错误，请重新输入");
+		  return false;
+	  }
+	  
+	  settime(obj);
+	  }
+  function settime(obj) { //发送验证码倒计时
+	  if (countdown == 0) { 
+		  obj.attr('disabled',false); 
+		  //obj.removeattr("disabled"); 
+		  obj.val("发送验证码");
+		  countdown = 60; 
+		  return;
+	  } else { 
+		  obj.attr('disabled',true);
+		  obj.val("重新发送(" + countdown + ")");
+		  countdown--; 
+	  } 
+  setTimeout(function() { 
+	  settime(obj) }
+	  ,1000) 
+  }
+  function checkMobile(s){   
+	var regu =/^[1][3|4|5|8][0-9]{9}$/; 
+	var re = new RegExp(regu); 
+	if (re.test(s)) {
+		return true; 
+	}else{
+		return false; 
+	} 
+} 
+  </script>
 <?php TPL::output('global/footer.tpl.htm'); ?>

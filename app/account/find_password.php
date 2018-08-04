@@ -47,6 +47,10 @@ class find_password extends AWS_CONTROLLER
 
 		TPL::output('account/find_password/process_success');
 	}
+	public function find_password_modify_action(){
+		
+		TPL::output('account/find_password/modify');
+	}
 
 	public function modify_action()
 	{

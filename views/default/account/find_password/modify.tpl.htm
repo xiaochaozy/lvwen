@@ -6,7 +6,7 @@
 		<h1><?php _e('输入新密码'); ?></h1>
 	</div>
 	<div class="mod-body">
-		<form class="aw-register-form" id="fpw_form" method="post" action="account/ajax/find_password_modify/">
+		<form class="aw-register-form" id="fpw_form" method="post" action="/?/account/ajax/find_password_modifyNew/">
 			<input type="hidden" name="active_code" value="<?php echo htmlspecialchars($_GET['key']); ?>"/>
 			<ul>
 				<li class="error alert-danger collapse error_message">
@@ -16,7 +16,7 @@
 					<input class="aw-register-email form-control" name="password" type="password" placeholder="<?php _e('密码'); ?>" />
 				</li>
 				<li>
-					<input class="aw-register-email form-control" name="re_password" type="password" placeholder="<?php _e('再次输入密码'); ?>" />
+					<input class="aw-register-email form-control" name="password2" type="password" placeholder="<?php _e('再次输入密码'); ?>" />
 				</li>
 				
 				<li class="aw-register-verify">
